@@ -21,8 +21,10 @@ DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 
 FDEVICE='rova'
 
-if ! [ "$1" = "$FDEVICE" ] && ! [ "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
-    exit 0
+if ! [ "$1" = "$FDEVICE" ]; then
+    if ! [ "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
+        exit 1
+    fi
 fi
 
 export TW_DEFAULT_LANGUAGE='en'
