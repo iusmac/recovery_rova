@@ -17,8 +17,6 @@
 #
 # Please maintain this if you use this script or any part of it
 
-DIR="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
-
 FDEVICE='rova'
 
 if ! [ "$1" = "$FDEVICE" ]; then
@@ -65,7 +63,34 @@ export OF_DISABLE_MIUI_OTA_BY_DEFAULT='1'
 export OF_QUICK_BACKUP_LIST='/system_root;/vendor;/data;/persist;/boot;'
 
 # Magisk
-export FOX_USE_SPECIFIC_MAGISK_ZIP="$DIR/addons/Magisk-v24.3.zip"
+user='topjohnwu'
+repo='Magisk'
+pattern="$user/$repo/releases/download/[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+\.apk"
+url="https://github.com/$user/$repo/releases/latest"
+
+echo 'Searching for latest Magisk...'
+html="$(curl --show-error --location "$url")" || {
+    code=$?
+    echo "Failed to download $url"
+    exit $code
+}
+
+file_link="$(echo "$html" | grep -iEo "$pattern" | (head -n 1; dd status=none of=/dev/null))"
+download_link="https://github.com/$file_link"
+file_name="/tmp/$(basename "${file_link/apk/zip}")"
+
+echo "Downloading Magisk from $download_link"
+curl \
+    --show-error \
+    --location "$download_link" \
+    --output "$file_name" || {
+    code=$?
+    echo "Failed to download $download_link"
+    exit $code
+}
+echo "Latest Magisk has been saved to: $file_name"
+
+export FOX_USE_SPECIFIC_MAGISK_ZIP="$file_name"
 
 for flavor in eng user userdebug; do
     add_lunch_combo omni_"$FDEVICE"-$flavor
