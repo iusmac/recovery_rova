@@ -35,7 +35,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <errno.h>
-#include <linux/qseecom.h>
+#include "qseecom.h"
 #include <hardware/keymaster_common.h>
 #include <hardware/hardware.h>
 #include "cutils/log.h"
