@@ -20,13 +20,6 @@ function main() {
 
         __processPatch__ 'vendor/recovery' "$file" || exit $?
     done
-
-    for patch in \
-        system_core-read_FDT_xiaomi_device-ForceADB.patch \
-        system_core-read_FDT_xiaomi_device.patch
-    do
-        __processPatch__ 'system/core' "$patch" || exit $?
-    done
 }
 
 function __processPatch__() {

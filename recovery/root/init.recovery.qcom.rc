@@ -1,5 +1,12 @@
 import /init.recovery.qcom_decrypt.rc
 
+service set-device-props /system/bin/set-device-props.sh
+    user root
+    group root
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
+
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
@@ -8,3 +15,6 @@ on init
     setprop ro.build.system_root_image true
     export ANDROID_ROOT /system_root
     setprop ro.board.platform msm8937
+
+on boot
+    start set-device-props

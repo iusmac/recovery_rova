@@ -118,6 +118,7 @@ RECOVERY_GRAPHICS_USE_LINELENGTH := true
 TW_USE_TOOLBOX := true
 AB_OTA_UPDATER := false
 TARGET_USES_LOGD := true
+TW_INCLUDE_RESETPROP := true
 
 # Disable Mouse Cursor
 TW_INPUT_BLACKLIST := "hbtp_vm"
