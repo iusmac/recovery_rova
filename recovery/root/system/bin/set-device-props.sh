@@ -32,4 +32,8 @@ case "$(cat /sys/firmware/devicetree/base/model)" in
         ;;
 esac
 
+# Workaround GPIO flashlight
+echo 1 > /sys/class/leds/flashlight/max_brightness;
+echo 0 > /sys/class/leds/flashlight/brightness;
+
 exit 0

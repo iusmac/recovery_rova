@@ -13,8 +13,7 @@ function main() {
     done
 
     for patch in \
-        vendor_recovery-SkipDeviceCheck.patch \
-        vendor_recovery-SetMaxBrightness.patch
+        vendor_recovery-SkipDeviceCheck.patch
     do
         file="ofox-10.0/$patch"
 
