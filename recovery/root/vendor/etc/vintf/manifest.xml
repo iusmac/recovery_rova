@@ -1,0 +1,16 @@
+<!--
+    Input:
+        manifest.xml
+        manifest_ab.xml
+        keymaster.xml
+-->
+<manifest version="1.0" type="device" target-level="3">
+    <hal format="hidl">
+        <name>android.hardware.keymaster</name>
+        <transport>hwbinder</transport>
+        <fqname>@3.0::IKeymasterDevice/default</fqname>
+    </hal>
+    <sepolicy>
+        <version>29.0</version>
+    </sepolicy>
+</manifest>
