@@ -21,4 +21,5 @@ PRODUCT_PACKAGES += \
     qcom_decrypt
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hardware.keystore=msm8937
+    ro.hardware.keystore=msm8937 \
+    ro.hardware.gatekeeper=msm8937
