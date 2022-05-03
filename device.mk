@@ -18,7 +18,8 @@
 # Encryption
 PRODUCT_PACKAGES += \
     libcryptfs_hw \
-    qcom_decrypt
+    qcom_decrypt \
+    qcom_decrypt_fbe
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.keystore=msm8937 \
