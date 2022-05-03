@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2017 The Android Open Source Project
+# Copyright (C) 2020-2022 OrangeFox Recovery Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,6 +57,7 @@ TARGET_KERNEL_CLANG_COMPILE := true
 TARGET_KERNEL_CLANG_VERSION := r437112b
 
 # Encryption
+BOARD_USES_QCOM_DECRYPTION := true
 TARGET_CRYPTFS_HW_PATH := vendor/qcom/opensource/commonsys/cryptfs_hw
 TARGET_HW_DISK_ENCRYPTION := true
 
@@ -100,7 +102,6 @@ TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 TW_SCREEN_BLANK_ON_BOOT := true
 TARGET_RECOVERY_QCOM_RTC_FIX := true
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBX_8888"
-TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/recovery.fstab
 BOARD_SUPPRESS_SECURE_ERASE := true
 RECOVERY_SDCARD_ON_DATA := true
 RECOVERY_GRAPHICS_USE_LINELENGTH := true
@@ -110,7 +111,3 @@ TARGET_USES_LOGD := true
 
 # Disable Mouse Cursor
 TW_INPUT_BLACKLIST := "hbtp_vm"
-
-# OEM otacert
-PRODUCT_EXTRA_RECOVERY_KEYS += \
-    vendor/recovery/security/miui

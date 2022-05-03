@@ -12,7 +12,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 
 2. **Clone Rova Builder:**
     ```console
-    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-9.0
+    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-10.0
     $ cd rova_builder
     ```
 
@@ -21,7 +21,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
     _(wait for Docker to prepare the container if running for the first time)_
     ```console
     $ ./orangefox_builder.sh
-    — Init repo? [Y/n] Y
+    — Init OrangeFox repo scripts? [Y/n] Y
     [...]
     — Sync sources? [Y/n] Y
     [...]
@@ -33,7 +33,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
     ```console
     $ cd src/
     $ ./device/xiaomi/rova/patches/apply.sh
-    — Apply ofox-9.0/bootable_recovery-DontAlterDT2W.patch? [Y/n] Y
+    — Apply system_core-Build-fastboot-binary.patch? [Y/n] Y
     — Apply [...]? [Y/n] Y
     ```
     **RESPOND _Y_ TO ALL PATCHES**
@@ -41,7 +41,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 5. **Build:**
     ```console
     $ ./orangefox_builder.sh
-    — Init repo? [Y/n] n
+    — Init OrangeFox repo scripts? [Y/n] n
     — Sync sources? [Y/n] n
     — Build recovery? [Y/n] Y
     ```
@@ -51,6 +51,8 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 _(place to kernel/xiaomi/rova)_
 - *Clang*: https://gitlab.com/iusmac/android_prebuilts_clang_host_linux-x86_clang-r437112b
 _(place to prebuilts/clang/host/linux-x86/clang-r437112b)_
+- *QCOM commonsys*: https://github.com/TeamWin/android_vendor_qcom_opensource_commonsys
+_(place to vendor/qcom/opensource/commonsys)_
 
 _NOTE: those are automatically downloaded when using Rova Builder_
 

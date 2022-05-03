@@ -7,7 +7,7 @@ function main() {
         bootable_recovery-DontAlterDT2W.patch \
         bootable_recovery-Fix-keymaster-on-A12.patch
     do
-        file="ofox-9.0/$patch"
+        file="ofox-10.0/$patch"
 
         __processPatch__ 'bootable/recovery' "$file" || exit $?
     done
@@ -16,7 +16,7 @@ function main() {
         vendor_recovery-SkipDeviceCheck.patch \
         vendor_recovery-SetMaxBrightness.patch
     do
-        file="ofox-9.0/$patch"
+        file="ofox-10.0/$patch"
 
         __processPatch__ 'vendor/recovery' "$file" || exit $?
     done

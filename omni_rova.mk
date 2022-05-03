@@ -1,5 +1,6 @@
 #
 # Copyright (C) 2017 The Android Open Source Project
+# Copyright (C) 2020-2022 OrangeFox Recovery Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,29 +15,23 @@
 # limitations under the License.
 #
 
-# Specify phone tech before including full_phone
-$(call inherit-product, vendor/omni/config/gsm.mk)
+# Release name
+PRODUCT_RELEASE_NAME := rova
 
-# Inherit some common Omni stuff.
+# Inherit from those products. Most specific first
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_minimal.mk)
+
+# Inherit common product files
 $(call inherit-product, vendor/omni/config/common.mk)
 
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-
-# Charger
-PRODUCT_PACKAGES += \
-    charger_res_images
-
-# Encryption
-PRODUCT_PACKAGES += \
-    libcryptfs_hw
-
-PRODUCT_PROPERTY_OVERRIDES += \
-    ro.hardware.keystore=msm8937
+# Inherit from device
+$(call inherit-product, device/xiaomi/$(PRODUCT_RELEASE_NAME)/device.mk)
 
 # Device identifier. This must come after all inclusions
-PRODUCT_DEVICE := rova
-PRODUCT_NAME := omni_rova
-PRODUCT_BRAND := Xiaomi
+BOARD_VENDOR := Xiaomi
+PRODUCT_BRAND := $(BOARD_VENDOR)
+PRODUCT_DEVICE := $(PRODUCT_RELEASE_NAME)
+PRODUCT_NAME := omni_$(PRODUCT_RELEASE_NAME)
+PRODUCT_MANUFACTURER := $(BOARD_VENDOR)
 PRODUCT_MODEL := Redmi 4A/5A
-PRODUCT_MANUFACTURER := Xiaomi
+TARGET_VENDOR := $(BOARD_VENDOR)

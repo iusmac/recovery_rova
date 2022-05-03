@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # This file is part of the OrangeFox Recovery Project
-# Copyright (C) 2018-2021 The OrangeFox Recovery Project
+# Copyright (C) 2018-2022 The OrangeFox Recovery Project
 #
 # OrangeFox is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,7 +45,6 @@ export OF_NO_TREBLE_COMPATIBILITY_CHECK='1'
 export OF_USE_SYSTEM_FINGERPRINT='1'
 export LC_ALL='C'
 export ALLOW_MISSING_DEPENDENCIES=true
-export OF_SKIP_DECRYPTED_ADOPTED_STORAGE='1'
 
 # export OF_DISABLE_DM_VERITY_FORCED_ENCRYPTION='1';
 # Disabling dm-verity causes stability issues with some kernel 4.9 ROMs; but is
@@ -92,7 +91,3 @@ curl \
 echo "Latest Magisk has been saved to: $file_name"
 
 export FOX_USE_SPECIFIC_MAGISK_ZIP="$file_name"
-
-for flavor in eng user userdebug; do
-    add_lunch_combo omni_"$FDEVICE"-$flavor
-done

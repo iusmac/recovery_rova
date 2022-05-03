@@ -15,10 +15,10 @@
 # limitations under the License.
 #
 
-PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/omni_rova.mk
+# Encryption
+PRODUCT_PACKAGES += \
+    libcryptfs_hw \
+    qcom_decrypt
 
-COMMON_LUNCH_CHOICES := \
-	omni_rova-user \
-	omni_rova-userdebug \
-	omni_rova-eng
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.hardware.keystore=msm8937
