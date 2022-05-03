@@ -4,7 +4,7 @@
 /vendor         ext4   /dev/block/bootdevice/by-name/cust                        flags=slotselect;display="Vendor";backup=1;wipeingui
 /vendor_image   emmc   /dev/block/bootdevice/by-name/cust                        flags=backup=1;flashimg=1
 
-/data           ext4   /dev/block/bootdevice/by-name/userdata                    flags=encryptable=footer;fileencryption=aes-256-xts:aes-256-cts
+/data           ext4   /dev/block/bootdevice/by-name/userdata                    flags=encryptable=footer;fileencryption=aes-256-xts:aes-256-cts:v1
 /cache          ext4   /dev/block/bootdevice/by-name/cache                       flags=display="Cache"
 
 /boot           emmc   /dev/block/bootdevice/by-name/boot                        flags=display="Boot"
