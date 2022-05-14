@@ -46,6 +46,7 @@ export OF_NO_TREBLE_COMPATIBILITY_CHECK='1'
 export OF_USE_SYSTEM_FINGERPRINT='1'
 export LC_ALL='C'
 export ALLOW_MISSING_DEPENDENCIES=true
+export FOX_REMOVE_AAPT='1'
 
 # export OF_DISABLE_DM_VERITY_FORCED_ENCRYPTION='1';
 # Disabling dm-verity causes stability issues with some kernel 4.9 ROMs; but is
