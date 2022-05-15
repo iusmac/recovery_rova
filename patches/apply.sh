@@ -11,14 +11,6 @@ function main() {
 
         __processPatch__ 'bootable/recovery' "$file" || exit $?
     done
-
-    for patch in \
-        vendor_recovery-SkipDeviceCheck.patch
-    do
-        file="ofox-10.0/$patch"
-
-        __processPatch__ 'vendor/recovery' "$file" || exit $?
-    done
 }
 
 function __processPatch__() {
