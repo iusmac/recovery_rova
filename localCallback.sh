@@ -23,12 +23,54 @@ function main() {
     case "$action" in
         --first-call) # before ramdisk packing
             FOX_RAMDISK="$1"
-            : # noop
+            removeFonts
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
             : # noop
     esac
+}
+
+function removeFonts() {
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local custom_xml=$TWRES_DIR/pages/customization.xml
+    local image_xml=$TWRES_DIR/resources/images.xml
+    local fonts_dir=$TWRES_DIR/fonts
+
+    echo -e "${ORANGE}-- Removing some fonts from ramdisk... ${NC}"
+
+    # Fonts to be deleted
+    declare -A fonts=(
+        ['font5']='Chococooky'
+        ['font7']='Exo2-Regular'
+        ['font8']='MILanPro-Regular'
+        ['font9']='Amatic'
+    )
+
+    # Remove references to them in resources
+    local font file
+    for font in "${!fonts[@]}"; do
+        file="$fonts_dir/${fonts["$font"]}.ttf"
+        rm "$file"
+
+        # Delete the matching line
+        if __findMatch__ "$font" "$image_xml"; then
+            sed -i "/$font/ d" "$image_xml"
+        fi
+
+        # Delete the matching line plus the next 2 lines
+        if __findMatch__ "$font" "$custom_xml"; then
+            sed -i "/$font/I,+2 d" "$custom_xml"
+        fi
+    done
+
+    # Those are not mentioned in resources
+    rm "$fonts_dir"/{Exo2,MILanPro}-Medium.ttf
+
+    # Let FiraCode move to where Chococooky font was to avoid the gap
+    if __findMatch__ 'row4_2a_y' "$custom_xml"; then
+        sed -i 's/row4_2a_y/row4_1_y/g' "$custom_xml"
+    fi
 }
 
 # Inherit some colour codes form vendor/recovery
