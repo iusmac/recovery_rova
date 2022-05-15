@@ -17,6 +17,8 @@
 #
 # Please maintain this if you use this script or any part of it
 
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+
 FDEVICE='rova'
 
 if ! [ "$1" = "$FDEVICE" ]; then
@@ -47,6 +49,7 @@ export OF_USE_SYSTEM_FINGERPRINT='1'
 export LC_ALL='C'
 export ALLOW_MISSING_DEPENDENCIES=true
 export FOX_REMOVE_AAPT='1'
+export FOX_LOCAL_CALLBACK_SCRIPT="$SCRIPT_DIR/localCallback.sh"
 
 # export OF_DISABLE_DM_VERITY_FORCED_ENCRYPTION='1';
 # Disabling dm-verity causes stability issues with some kernel 4.9 ROMs; but is
