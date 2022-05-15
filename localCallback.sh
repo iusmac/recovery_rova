@@ -27,7 +27,7 @@ function main() {
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
-            : # noop
+            assertRamdiskIsSmallerThan 20 # MiB
     esac
 }
 
@@ -71,6 +71,31 @@ function removeFonts() {
     if __findMatch__ 'row4_2a_y' "$custom_xml"; then
         sed -i 's/row4_2a_y/row4_1_y/g' "$custom_xml"
     fi
+}
+
+function assertRamdiskIsSmallerThan() {
+    local max_ramdisk_size="${1-}"
+    echo -ne "${ORANGE}-- Checking that recovery ramdisk size does not exceed ${max_ramdisk_size}MiB... ${NC}"
+
+    local ramdisk="$OUT/ramdisk-recovery.img"
+    if [ ! -f "$ramdisk" ]; then
+        echo -e "${WHITEONRED} FAIL! Cannot find ramdisk file ${NC}"
+        echo -e "--- Looked at $ramdisk"
+        exit 1
+    fi
+
+    local ramdisk_size
+    ramdisk_size="$(stat --format='%s' "$ramdisk")"
+    local remaining=$((max_ramdisk_size * 1024 ** 2 - ramdisk_size))
+    local pretty_rem
+    pretty_rem="$(__prettyNumber__ "$remaining")"
+
+    if [ $remaining -lt 0 ]; then
+        echo -e "${WHITEONRED} FAIL! Exceeds by ${pretty_rem:1} bytes ${NC}"
+        exit 1
+    fi
+
+    echo -e "${WHITEONGREEN} OK! Remaining $pretty_rem bytes ${NC}"
 }
 
 # Inherit some colour codes form vendor/recovery
