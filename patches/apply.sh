@@ -4,7 +4,6 @@
 
 function main() {
     for patch in \
-        bootable_recovery-DontAlterDT2W.patch \
         bootable_recovery-Fix-keymaster-on-A12.patch
     do
         file="ofox-10.0/$patch"
