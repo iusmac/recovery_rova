@@ -24,6 +24,7 @@ function main() {
         --first-call) # before ramdisk packing
             FOX_RAMDISK="$1"
             removeFonts
+            compressAllPNGs
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -98,6 +99,34 @@ function assertRamdiskIsSmallerThan() {
     echo -e "${WHITEONGREEN} OK! Remaining $pretty_rem bytes ${NC}"
 }
 
+function compressAllPNGs() {
+    echo -ne "${ORANGE}-- Compressing PNGs in ramdisk... ${NC}"
+
+    local optipng="$SCRIPT_DIR/prebuilt/optipng/bin/linux/x64/optipng"
+    local total_freed_bytes=0 old_size new_size code pretty_total
+    while read -r file; do
+        if [ ! -f "$file" ]; then
+            continue
+        fi
+
+        old_size="$(stat --format='%s' "$file")"
+
+        "$optipng" \
+            -o0 \
+            -clobber \
+            -strip all \
+            -quiet \
+            "$file"; code=$?
+
+        new_size="$(stat --format='%s' "$file")"
+        if [ $code -eq 0 ] && [ "$old_size" -gt "$new_size" ]; then
+            total_freed_bytes=$(( total_freed_bytes + (old_size - new_size) ))
+        fi
+    done <<< "$(find "$FOX_RAMDISK" -type f -name '*.png')"
+
+    echo -e "${WHITEONGREEN} Freed up about $(__prettyNumber__ "$total_freed_bytes") bytes ${NC}"
+}
+
 # Inherit some colour codes form vendor/recovery
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -134,6 +163,8 @@ function __findMatch__() {
         return 1
     fi
 }
+
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 # This script will be called from vendor/recovery and will receive two args
 main "$1" "$2"
