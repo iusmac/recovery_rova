@@ -11,6 +11,9 @@ on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
 
+    export TERMINFO /system/etc/terminfo
+    export TERM bg1.25
+
 on init
     setprop ro.build.system_root_image true
     export ANDROID_ROOT /system_root
