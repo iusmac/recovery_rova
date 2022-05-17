@@ -1,0 +1,53 @@
+# Copyright (c) 2010, 2012, 2013, 2014
+#	Thorsten Glaser <tg@mirbsd.org>
+# This file is provided under the same terms as mksh.
+#-
+# Minimal /system/etc/mkshrc for Android
+#
+# Support: https://launchpad.net/mksh
+#
+# Copyright (c) 2022, The OrangeFox Recovery Project
+#
+
+: ${HOSTNAME:=$(getprop ro.product.device)}
+: ${HOSTNAME:=android}
+: ${TMPDIR:=/tmp}
+export HOSTNAME TMPDIR
+
+# OrangeFox
+InitFox() {
+    alias dir='l -all' l='ls --color' la='l -a' ll='l -l' lo='l -a -l';
+    alias grep='grep -n --color=auto' fgrep='fgrep -n --color=auto' egrep='egrep -n --color=auto'
+    [ -z "$HOME" ] && export HOME=/sdcard;
+    [ -z "$SHELL" ] && export SHELL=/sbin/sh;
+    [ -z "$LINES" ] && export LINES=21;
+    [ -z "$COLUMNS" ] && export COLUMNS=44;
+
+    if [ -f /sdcard/Fox/fox.mkshrc ]; then
+        source /sdcard/Fox/fox.mkshrc;
+    fi
+
+    if [ -f $HOME/.mkshrc ]; then
+        source $HOME/.mkshrc;
+    elif [ -f /sdcard/.mkshrc ]; then
+        source /sdcard/.mkshrc;
+    fi
+
+    local red=$'\x1b[01;31m'
+    local green=$'\x1b[01;32m'
+    local blue=$'\x1b[01;34m'
+    local NC=$'\x1b[0m'
+
+    PS1='#'; (( USER_ID )) && PS1='$';
+    export PS4='[$EPOCHREALTIME] '
+    export PS1="\${|
+        local e=\$?
+
+        (( e )) && REPLY+='$red'\${e}${NC}'|'
+
+        return \$e
+    }${green}\${HOSTNAME}${NC}:${blue}\${PWD:-?}${NC}${PS1} "
+}
+
+InitFox;
+# OrangeFox
