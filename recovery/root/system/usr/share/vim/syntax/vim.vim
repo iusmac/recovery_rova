@@ -1,0 +1,1 @@
+/sdcard/Fox/FoxFiles/vim/usr/share/vim/syntax/vim.vim

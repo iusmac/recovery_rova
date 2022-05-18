@@ -29,6 +29,7 @@ function main() {
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
             assertRamdiskIsSmallerThan 20 # MiB
+            copyVimToZip
     esac
 }
 
@@ -127,6 +128,11 @@ function compressAllPNGs() {
     done <<< "$(find "$FOX_RAMDISK" -type f -name '*.png')"
 
     echo -e "${WHITEONGREEN} Freed up about $(__prettyNumber__ "$total_freed_bytes") bytes ${NC}"
+}
+
+function copyVimToZip() {
+    echo -e "${GREY}-- Installing Vim editor... ${NC}"
+    cp -a "$SCRIPT_DIR"/prebuilt/vim "$OF_WORKING_DIR/sdcard/Fox/FoxFiles"
 }
 
 # Inherit some colour codes form vendor/recovery

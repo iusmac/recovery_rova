@@ -1,0 +1,14 @@
+#!/sbin/sh
+
+vim_bin=/system/xbin/vim
+export TERMINFO=/system/etc/terminfo
+export TERM=xterm-256color
+
+if [ -e $vim_bin ]; then
+    chmod 0755 $vim_bin
+else
+    echo 'Vim binary is missing. Try reinstalling OrangeFox using .zip archive.'
+    exit 1
+fi
+
+$vim_bin "$@"
