@@ -1,0 +1,249 @@
+#!/sbin/sh
+
+# ***************************************
+# ******** FBE Encryption Toggler *******
+# ***************************************
+# ** Version: v1.0 ** Date: 21/05/2022 **
+# ***************************************
+# *********** (c) 2022 iusmac ***********
+# ***************************************
+
+main() {
+    local action="$1"
+    local fde_regex='(encryptable|forceencrypt)=footer'
+    local fbe_regex='fileencryption=[^,]+(,?)'
+    local fbe_to_fde="/\/data/ s/$fbe_regex/encryptable=footer\1/g"
+    local fstab_file='/vendor/etc/fstab.qcom'
+    local GREP=$(find_grep)
+    local SED=$(find_sed)
+
+    isFdeEnabled() {
+         $GREP -E -q "$fde_regex" $fstab_file && ! $GREP -E -q "$fbe_regex" $fstab_file
+    }
+
+    isFbeEnabled() {
+        ! $GREP -E -q "$fde_regex" $fstab_file && $GREP -E -q "$fbe_regex" $fstab_file
+    }
+
+    if [ "$action" != '0' ] &&
+        [ "$action" != '1' ] &&
+        [ "$action" != '2' ] &&
+        [ "$action" != '3' ]; then
+        log "Invalid action: $action"
+        return 1
+    fi
+
+    if [ "$action" = '3' ]; then
+        DISPLAY_LOG=0
+    fi
+
+    log 'Starting ...'
+
+    log 'Mounting vendor ...'
+    mount_part /vendor
+
+    if [ ! -s "$fstab_file" ]; then
+        log "Unable to locate file: $fstab_file"
+        log 'Unmounting vendor ...'
+        umount_part /vendor
+        exit 1
+    fi
+
+    local code=0
+    if [ "$action" = '0' ]; then # Disable FBE
+        log 'Disabling FBE encryption ...'
+
+        if isFdeEnabled; then
+            code=1
+            log 'FBE has already been disabled!'
+        elif [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
+            code=1
+            log 'Failed to disable FBE due to malformed fstab file!'
+        fi
+    elif [ "$action" = '1' ]; then # Enable FBE
+        log 'Mounting system ...'
+        mount_part /system_root
+
+        log 'Checking SDK compatibility ...'
+        local sdk; sdk="$(getSdk)"
+
+        if [ -z "$sdk" ]; then
+            sdk=0
+        fi
+
+        if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 24 ]; then
+            code=1; log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
+        else
+            if [ "$sdk" -eq 0 ]; then
+                log 'Cannot detect ROM SDK. Continue anyway.'
+                log 'Keep in mind that only Android 7+ based ROMs support FBE.'
+            elif [ "$sdk" -lt 29 ]; then
+                log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
+            fi
+            log 'Enabling FBE encryption ...'
+
+            local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
+            # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
+            # let's explicitly set it to be compatible across recoveries
+            if [ "$sdk" -ge 30 ]; then
+                fbe_str="${fbe_str}:v1"
+            fi
+            local fde_to_fbe="/\/data/ s/$fde_regex/$fbe_str/g"
+
+            if isFbeEnabled; then
+                code=1; log 'FBE has already been enabled!'
+            elif [ -z "$($SED -E -i -e "$fde_to_fbe w /dev/stdout" $fstab_file)" ]; then
+                code=1; log 'Failed to enable FBE due to malformed fstab file!'
+            fi
+        fi
+        log 'Unmounting system ...'
+        umount_part /system_root
+    elif [ "$action" = '2' ]; then # Disable FBE if enabled
+        if ! isFbeEnabled; then
+            log 'FBE is not enabled. Skipping.'
+        else
+            log 'Disabling FBE encryption ...'
+
+            if [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
+                code=1
+                log 'Failed to disable FBE due to malformed fstab file!'
+            fi
+        fi
+    elif [ "$action" = '3' ]; then # Silently print FBE state
+        log 'Detecting FBE state ...'
+        if isFbeEnabled; then
+            log 'FBE is enabled.'
+            echo -n 1
+        else
+            log 'FBE is not enabled.'
+            echo -n 0
+        fi
+    fi
+
+    log 'Unmounting vendor ...'
+    umount_part /vendor
+
+    if [ $code -eq 0 ]; then
+        log 'Done!'
+    fi
+    exit $code
+}
+
+# log "<message>" ["<message 2>" ...]
+log() {
+    local logf=/tmp/FBEtoggler.log
+    until [ ! "$1" ]; do
+        if [ $DISPLAY_LOG -eq 1 ]; then
+            echo -e "FBEToggler: $1" | tee -a $logf
+        else
+            echo -e "FBEToggler: $1" >> $logf
+        fi
+
+        shift
+    done
+}
+
+# is_mounted <partition>
+is_mounted() {
+    case `mount` in
+        *" $1 "*) echo 1;;
+        *) echo 0;;
+    esac;
+}
+
+# mount_part <partition>
+mount_part() {
+    if [ -z "$1" ]; then
+        return
+    fi
+
+    local F=$(is_mounted "$1")
+    if [ "$F" = "1" ]; then
+        umount_part "$1"
+    fi
+
+    mount -w $1
+}
+
+# umount_part <partition>
+umount_part() {
+    if [ -z "$1" ]; then
+        return
+    fi
+
+    local F=$(is_mounted "$1")
+    if [ "$F" = "1" ]; then
+        umount "$1" > /dev/null 2>&1
+    fi
+}
+
+# abort [<message>]
+abort() {
+    log "$*"
+    exit 1
+}
+
+# avoid the standalone BSD grep, which segfaults on "grep -w"
+find_grep() {
+    local GREP=$(which grep)
+    local F=/prop.default
+
+    if [ ! -e $F ]; then
+        F=/default.prop
+        [ ! -e $F ] && F=/tmp/recovery.log
+    fi
+
+    if [ ! -L $GREP ]; then
+        GREP=""
+        if [ -x $BUSYBOX ]; then
+            GREP="$BUSYBOX grep"
+            $GREP -q build $F > /dev/null 2>&1 || GREP=""
+        fi
+
+        if [ -z "$GREP" -a -x $TOYBOX ]; then
+            GREP="$TOYBOX grep"
+            $GREP -q build $F > /dev/null 2>&1 || GREP=""
+        fi
+
+        [ -z "$GREP" ] && GREP=/system/bin/grep
+    fi
+
+    echo "$GREP"
+}
+
+find_sed() {
+    local SED=$(which sed)
+
+    if [ ! -L $SED ]; then
+        SED="$TOYBOX sed"
+    fi
+
+    echo "$SED"
+}
+
+getSdk() {
+    for file in /system_root/system/build.prop /system_root/build.prop; do
+        if [ -s "$file" ]; then
+            sed -E -n '/ro.(system.)?build.version.sdk=/ { s/[^0-9]+//p;q }' $file
+            return 0
+        fi
+    done
+
+    log "Unable to locate file: $file"
+    return 1
+}
+
+DISPLAY_LOG=1
+BUSYBOX=$(which busybox)
+if [ -z "$BUSYBOX" ]; then
+   BUSYBOX=/system/bin/busybox
+   [ ! -e "$BUSYBOX" ] && BUSYBOX=/sbin/busybox
+fi
+
+TOYBOX=$(which toybox)
+if [ -z "$TOYBOX" ]; then
+   TOYBOX=/system/bin/toybox
+   [ ! -e "$TOYBOX" ] && TOYBOX=/sbin/toybox
+fi
+
+main "$1"

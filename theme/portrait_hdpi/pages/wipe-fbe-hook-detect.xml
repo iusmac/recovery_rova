@@ -1,0 +1,8 @@
+<!-- FBE hook-detect -->
+<action>
+    <condition var1="part_option" var2="/data"/>
+    <action function="ftls">
+        twrp xset fbe_toggler_is_fbe_enabled=$(/sbin/FBEToggler 3)
+    </action>
+</action>
+<!-- /FBE hook-detect -->

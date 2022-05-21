@@ -1,0 +1,108 @@
+<!-- FBE page -->
+<page name="fbe_toggle">
+    <template name="body_key"/>
+    <template name="statusbarinfo"/>
+    <template name="tabs"/>
+
+    <button style="tab_btn">
+        <placement x="156" y="%tab_btn_y%" w="360" h="84"/>
+        <text>{@part_menu_hdr}</text>
+        <action function="page">part_options</action>
+    </button>
+
+    <button style="tab_btn_hl">
+        <placement x="564" y="%tab_btn_y%" w="360" h="84"/>
+        <text>{@format_data_hdr} + FBE</text>
+    </button>
+
+    <image style="tab">
+        <placement x="588" y="%tab_title_h%" placement="2"/>
+    </image>
+
+    <text style="text_ab_title">
+        <placement x="%center_x%" y="%ab_bc_y%" placement="5"/>
+        <text>FBE Encryption Toggler</text>
+    </text>
+
+    <image>
+        <placement x="%col1_x%" y="%row1_3_y%"/>
+        <image resource="icon_warning"/>
+    </image>
+
+    <text style="text_body2_fail">
+        <placement x="%col1_x_indent%" y="%row1_3_y%"/>
+        <text>{@format_data_ptr1}</text>
+    </text>
+
+    <text style="text_body2_fail">
+        <placement x="%col1_x_indent%" y="%row2_1_y%"/>
+        <text>{@format_data_ptr2}</text>
+    </text>
+
+    <text style="text_body2_fail">
+        <placement x="%col1_x_indent%" y="%row2_2_y%"/>
+        <text>{@format_data_ptr3}</text>
+    </text>
+
+    <text style="text_body2_fail">
+        <condition var1="tw_has_adopted_storage" var2="1"/>
+        <placement x="%col1_x_indent%" y="%row2_3_y%"/>
+        <text>{@also_wipes} {@adopted_storage}</text>
+    </text>
+
+    <text style="text_body2">
+        <placement x="%col1_x_indent%" y="%row3_1_y%"/>
+        <text>{@yes_continue}</text>
+    </text>
+
+    <text style="caption_hl">
+        <placement x="%col1_x_caption%" y="%row3_3a_y%"/>
+        <text>{@confirm_wipe_cptn}</text>
+    </text>
+
+    <input>
+        <placement x="%col1_x_caption%" y="%row4_1a_y%" w="%input_w%" h="%input_height%"/>
+        <text>%tw_confirm_formatdata%</text>
+        <data name="tw_confirm_fbe_toggle"/>
+        <restrict minlen="3" maxlen="3" allow="yes"/>
+        <action function="page">fbe_toggle_confirm</action>
+    </input>
+
+    <fill color="%accent%">
+        <placement x="%col1_x_caption%" y="%row4_2a_y%" w="%input_w%" h="%input_line_height%" placement="1"/>
+    </fill>
+
+    <template name="gestures_key"/>
+
+    <action>
+        <touch key="home"/>
+        <action function="page">part_options</action>
+    </action>
+
+    <action>
+        <touch key="back"/>
+        <action function="page">part_options</action>
+    </action>
+</page>
+
+<page name="fbe_toggle_confirm">
+    <action>
+        <condition var1="tw_confirm_fbe_toggle" var2="yes"/>
+        <action function="set">tw_back=formatdata</action>
+        <action function="set">tw_action=wipe</action>
+        <action function="set">tw_action_param=DATAMEDIA</action>
+        <action function="set">tw_has_action2=1</action>
+        <action function="set">tw_action2=terminalcommand</action>
+        <action function="set">tw_action2_param=/sbin/FBEToggler %tw_enable_fbe%</action>
+        <action function="set">tw_action_text1={@factory_reset_hdr}</action>
+        <action function="set">tw_action_text2={@formatting_data}</action>
+        <action function="set">tw_complete_text1={@format_data_complete}</action>
+        <action function="page">wipe_action_page</action>
+    </action>
+
+    <action>
+        <condition var1="tw_confirm_fbe_toggle" op="!=" var2="yes"/>
+        <action function="page">fbe_toggle</action>
+    </action>
+</page>
+<!-- /FBE page -->

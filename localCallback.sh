@@ -25,6 +25,7 @@ function main() {
             FOX_RAMDISK="$1"
             removeFonts
             compressAllPNGs
+            addFBEFeatureToPartMgr
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -135,6 +136,40 @@ function copyVimToZip() {
     cp -a "$SCRIPT_DIR"/prebuilt/vim "$OF_WORKING_DIR/sdcard/Fox/FoxFiles"
 }
 
+function addFBEFeatureToPartMgr() {
+    echo -e "${GREY}-- Adding FBE feature to Partition Manager... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local wipe_xml=$TWRES_DIR/pages/wipe.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line buttons="$local_pages/wipe-fbe-buttons.xml"
+    local page="$local_pages/wipe-fbe-page.xml"
+    local hook_format="$local_pages/wipe-fbe-hook-format.xml"
+    local hook_detect="$local_pages/wipe-fbe-hook-detect.xml"
+
+    # Remove old changes
+    local tag
+    for tag in 'buttons' 'page' 'hook-format' 'hook-detect'; do
+        sed -i "/<!-- FBE $tag -->/,/<!-- \/FBE $tag -->/ d" "$wipe_xml"
+    done
+
+    # Insert buttons right before the 'Format Data' button
+    line="$(__getMatchLineNr__ '<button style="btn_raised_warn">' "$wipe_xml")" || exit $?
+    sed -i "$((line - 1)) r $buttons" "$wipe_xml"
+
+    # Insert our page after all pages
+    line="$(__getMatchLineNr__ '<\/pages>' "$wipe_xml")" || exit $?
+    sed -i "$((line - 1)) r $page" "$wipe_xml"
+
+    # Special case: we also need to trigger FBE disabling on data formatting page
+    line="$(__getMatchLineNr__ '<data name="tw_confirm_formatdata"\/>' "$wipe_xml")" || exit $?
+    sed -i "$line r $hook_format" "$wipe_xml"
+
+    # Insert hook to determine which button to display 'Enable FBE' or 'Disable FBE'
+    line="$(__getMatchLineNr__ '<partitionlist style="partitionlist_radio">' "$wipe_xml")" || exit $?
+    sed -i "$((line - 1)) r $hook_detect" "$wipe_xml"
+}
+
 # Inherit some colour codes form vendor/recovery
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -171,6 +206,17 @@ function __findMatch__() {
         return 1
     fi
 }
+
+function __getMatchLineNr__() {
+    local pattern="${1-}" file="${2-}" line
+    line=$(sed -n "/$pattern/=" "$file")
+    if [ -z "$line" ] || [ "$line" -le 0 ]; then
+        echo -e "${GREY}--- caution: cannot find match '$pattern' in file: $file${NC}" >&2
+        return 1
+    fi
+    echo "$line"
+}
+
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 

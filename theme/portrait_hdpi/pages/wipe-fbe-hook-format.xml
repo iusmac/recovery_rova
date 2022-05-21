@@ -1,0 +1,5 @@
+<!-- FBE hook-format -->
+<action function="set">tw_has_action2=1</action>
+<action function="set">tw_action2=terminalcommand</action>
+<action function="set">tw_action2_param=/sbin/FBEToggler 2</action>
+<!-- /FBE hook-format -->
