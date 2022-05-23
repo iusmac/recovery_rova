@@ -26,6 +26,7 @@ function main() {
             removeFonts
             compressAllPNGs
             addFBEFeatureToPartMgr
+            enableRebootToFastbootItemUnconditionally
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -168,6 +169,18 @@ function addFBEFeatureToPartMgr() {
     # Insert hook to determine which button to display 'Enable FBE' or 'Disable FBE'
     line="$(__getMatchLineNr__ '<partitionlist style="partitionlist_radio">' "$wipe_xml")" || exit $?
     sed -i "$((line - 1)) r $hook_detect" "$wipe_xml"
+}
+
+function enableRebootToFastbootItemUnconditionally() {
+    echo -e "${GREY}-- Enabling reboot to 'Fastboot' item unconditionally... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local reboot_xml=$TWRES_DIR/pages/reboot.xml
+
+    local str='<condition var1="tw_fastboot_mode"'
+    if __findMatch__ "$str" "$reboot_xml"; then
+        sed -i "/$str/ d" "$reboot_xml"
+    fi
 }
 
 # Inherit some colour codes form vendor/recovery
