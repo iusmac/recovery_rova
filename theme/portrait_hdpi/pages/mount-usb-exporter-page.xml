@@ -1,0 +1,105 @@
+<!-- USBExporter page -->
+<page name="usb_storage_exporter">
+    <background color="%background%"/>
+    <template name="keys"/>
+    <action>
+        <action function="set">tw_back=mount</action>
+    </action>
+
+    <action>
+        <condition var1="tw_exp_busy" var2="1"/>
+        <action function="ftls">
+            msg="$(/system/bin/usb-stor-export.sh -f /dev/block/mmcblk0 2>&amp;1)"; code=$?
+            twrp xset tw_exp_msg="$msg"
+
+            [ $code -eq 1 ] &amp;&amp; twrp xset tw_exp_busy=0
+        </action>
+        <action function="terminalcommand">echo "%tw_exp_msg%"</action>
+    </action>
+
+    <console>
+        <placement x="%col1_x%" y="%console_ab_y%" w="%console_width%" h="1428"/>
+        <condition var1="use_fixed_font" var2="0"/>
+    </console>
+
+    <console>
+        <placement x="%col1_x%" y="%console_ab_y%" w="%console_width%" h="1428"/>
+        <condition var1="use_fixed_font" var2="1"/>
+        <font resource="fixed"/>
+    </console>
+
+    <animation>
+        <condition var1="tw_exp_busy" var2="1"/>
+        <placement x="%progressbar_x%" y="%ab_h%"/>
+        <resource name="progress"/>
+        <speed fps="60" render="1"/>
+        <loop frame="1"/>
+    </animation>
+
+    <template name="ab_main"/>
+    <template name="statusbarinfo"/>
+
+    <!-- Back -->
+    <button style="actionbar">
+        <condition var1="tw_exp_busy" var2="0"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="key">back</action>
+        <action function="page">%tw_back%</action>
+    </button>
+
+    <image>
+        <condition var1="tw_exp_busy" var2="0"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <image resource="actionbar_back"/>
+    </image>
+
+    <!-- Cancel -->
+    <button style="actionbar">
+        <condition var1="tw_exp_busy" var2="1"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="stopmtp"/>
+        <action function="adb">disable</action>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+        <action function="startmtp"/>
+        <action function="set">tw_exp_busy=0</action>
+    </button>
+
+    <image>
+        <condition var1="tw_exp_busy" var2="1"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <image resource="actionbar_cancel"/>
+    </image>
+
+    <text style="text_ab_title">
+        <placement x="%col1_x_indent%" y="%ab_bc_y%"/>
+        <text>USB Storage Exporter</text>
+    </text>
+
+    <!-- Buttons -->
+    <button style="btn_raised">
+        <placement x="%btn_raised_left_x%" y="1764"/>
+        <text>{@reboot_btn}</text>
+        <action function="overlay">reboot</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_exp_busy" var2="1"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>Unexport</text>
+        <action function="stopmtp"/>
+        <action function="adb">disable</action>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+        <action function="startmtp"/>
+        <action function="set">tw_exp_busy=0</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_exp_busy" var2="0"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>Try again</text>
+        <action function="set">tw_exp_busy=1</action>
+    </button>
+</page>
+<!-- /USBExporter page -->

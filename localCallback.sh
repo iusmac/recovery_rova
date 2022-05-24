@@ -27,6 +27,7 @@ function main() {
             compressAllPNGs
             addFBEFeatureToPartMgr
             enableRebootToFastbootItemUnconditionally
+            addUSBStorageExporterToMount
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -181,6 +182,29 @@ function enableRebootToFastbootItemUnconditionally() {
     if __findMatch__ "$str" "$reboot_xml"; then
         sed -i "/$str/ d" "$reboot_xml"
     fi
+}
+
+function addUSBStorageExporterToMount() {
+    echo -e "${GREY}-- Adding USB Storage Exporter slider to Mount... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local mount_xml=$TWRES_DIR/pages/mount.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line slider="$local_pages/mount-usb-exporter-slider.xml"
+    local page="$local_pages/mount-usb-exporter-page.xml"
+
+    local tag
+    for tag in 'page' 'slider'; do
+        sed -i "/<!-- USBExporter $tag -->/,/<!-- \/USBExporter $tag -->/ d" "$mount_xml"
+    done
+
+    # Insert our page after all pages
+    line="$(__getMatchLineNr__ '<\/pages>' "$mount_xml")" || exit $?
+    sed -i "$((line - 1)) r $page" "$mount_xml"
+
+    # Insert slider
+    line="$(__getMatchLineNr__ '<\/partitionlist>' "$mount_xml")" || exit $?
+    sed -i "$line r $slider" "$mount_xml"
 }
 
 # Inherit some colour codes form vendor/recovery

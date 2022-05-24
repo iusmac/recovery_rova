@@ -1,0 +1,12 @@
+<!-- USBExporter slider -->
+<text style="caption">
+    <placement x="%center_x%" y="%slider_text_y%" placement="5"/>
+    <text>Swipe to Export Device Storage</text>
+</text>
+
+<slider style="slider_action">
+    <placement x="%center_x%" y="%slider_y%" placement="5"/>
+    <action function="set">tw_exp_busy=1</action>
+    <action function="page">usb_storage_exporter</action>
+</slider>
+<!-- /USBExporter slider -->
