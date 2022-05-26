@@ -1,0 +1,68 @@
+<!-- Lifetime -->
+<action>
+    <action function="ftls">
+        lifetime_hex="$(cat /sys/class/mmc_host/mmc0/mmc0:0001/life_time)";
+        eol_hex="$(cat /sys/class/mmc_host/mmc0/mmc0:0001/pre_eol_info)";
+
+        case "$lifetime_hex" in
+            *0) lifetime='Undefined';;
+            *1) lifetime='~0-10 Percent';;
+            *2) lifetime='~10-20 Percent';;
+            *3) lifetime='~20-30 Percent';;
+            *4) lifetime='~30-40 Percent';;
+            *5) lifetime='~40-50 Percent';;
+            *6) lifetime='~50-60 Percent';;
+            *7) lifetime='~60-70 Percent';;
+            *8) lifetime='~70-80 Percent';;
+            *9) lifetime='~80-90 Percent';;
+            *a | *A) lifetime='~90-100 Percent';;
+            *b | *B) lifetime='>100 Percent';;
+            *) lifetime='Reserved'
+        esac
+
+        case "$eol_hex" in
+            *0) eol='Undefined';;
+            *1) eol='Normal';;
+            *2) eol='Warning';;
+            *3) eol='Urgent';;
+            *) eol='Reserved'
+        esac
+
+        twrp xset emmc_lifetime="$lifetime"
+        twrp xset emmc_lifetime_eol="$eol"
+    </action>
+</action>
+
+<text style="text_ab_subtitle">
+    <condition var1="emmc_lifetime"/>
+    <condition var1="emmc_lifetime_eol"/>
+    <placement x="%center_x%" y="%slider_y%" placement="4"/>
+    <text>eMMC Lifetime Used</text>
+</text>
+
+<text style="caption">
+    <condition var1="emmc_lifetime"/>
+    <condition var1="emmc_lifetime_eol"/>
+    <placement x="%center_x%" y="%row_btn1_y%" placement="5"/>
+    <text>%emmc_lifetime%</text>
+</text>
+
+<text style="text_ab_title">
+    <condition var1="emmc_lifetime"/>
+    <condition var1="emmc_lifetime_eol"/>
+    <placement x="%center_x%" y="%nav_text_y%" placement="4"/>
+    <text>%emmc_lifetime_eol%</text>
+</text>
+
+<button>
+    <fill color="%transparent%"/>
+    <condition var1="emmc_lifetime"/>
+    <condition var1="emmc_lifetime_eol"/>
+    <placement x="%back_button_x%" y="%slider_y%" w="520" h="160" placement="3"/>
+    <action function="terminalcommand">
+        echo 'Single-level &amp; multi-level cells:' "$(cat /sys/class/mmc_host/mmc0/mmc0:0001/life_time)";
+        echo 'Pre-end of life info:' "$(cat /sys/class/mmc_host/mmc0/mmc0:0001/pre_eol_info)";
+    </action>
+    <action function="overlay">console</action>
+</button>
+<!-- /Lifetime -->

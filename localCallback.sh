@@ -28,6 +28,7 @@ function main() {
             addFBEFeatureToPartMgr
             enableRebootToFastbootItemUnconditionally
             addUSBStorageExporterToMount
+            addEMMCLifetimeToPartMgr
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -205,6 +206,21 @@ function addUSBStorageExporterToMount() {
     # Insert slider
     line="$(__getMatchLineNr__ '<\/partitionlist>' "$mount_xml")" || exit $?
     sed -i "$line r $slider" "$mount_xml"
+}
+
+function addEMMCLifetimeToPartMgr() {
+    echo -e "${GREY}-- Adding eMMC Lifetime Used to Partition Manager... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local wipe_xml=$TWRES_DIR/pages/wipe.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line lifetime="$local_pages/wipe-lifetime.xml"
+
+    sed -i '/<!-- Lifetime -->/,/<!-- \/Lifetime -->/ d' "$wipe_xml"
+
+    # Insert on partition manager page
+    line="$(__getMatchLineNr__ '<image resource="fab_accept"\/>' "$wipe_xml")" || exit $?
+    sed -i "$((line + 1)) r $lifetime" "$wipe_xml"
 }
 
 # Inherit some colour codes form vendor/recovery
