@@ -4,7 +4,8 @@
 
 function main() {
     for patch in \
-        bootable_recovery-Fix-keymaster-on-A12.patch
+        bootable_recovery-Fix-keymaster-on-A12.patch \
+        bootable_recovery-Add-FBE-alert.patch
     do
         file="ofox-10.0/$patch"
 
