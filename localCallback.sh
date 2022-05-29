@@ -29,6 +29,7 @@ function main() {
             enableRebootToFastbootItemUnconditionally
             addUSBStorageExporterToMount
             addEMMCLifetimeToPartMgr
+            addFastbootItemToMenu
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -221,6 +222,28 @@ function addEMMCLifetimeToPartMgr() {
     # Insert on partition manager page
     line="$(__getMatchLineNr__ '<image resource="fab_accept"\/>' "$wipe_xml")" || exit $?
     sed -i "$((line + 1)) r $lifetime" "$wipe_xml"
+}
+
+function addFastbootItemToMenu() {
+    echo -e "${GREY}-- Adding Fastboot item to Menu... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local advanced_xml=$TWRES_DIR/pages/advanced.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line item="$local_pages/advanced-fastboot-item.xml"
+    local page="$local_pages/advanced-fastboot-page.xml"
+
+    sed -i -e '/<!-- Fastboot item -->/,/<!-- \/Fastboot item -->/ d' \
+        -e '/<!-- Fastboot page -->/,/<!-- \/Fastboot page -->/ d' \
+        "$advanced_xml"
+
+    # Insert after ADB & Sideload item
+    line="$(__getMatchLineNr__ '<listitem name="{@fox_modules_hdr}">' "$advanced_xml")" || exit $?
+    sed -i "$((line - 1)) r $item" "$advanced_xml"
+
+    # Insert our page at the end
+    line="$(__getMatchLineNr__ '<\/pages>' "$advanced_xml")" || exit $?
+    sed -i "$((line - 1)) r $page" "$advanced_xml"
 }
 
 # Inherit some colour codes form vendor/recovery

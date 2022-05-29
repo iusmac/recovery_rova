@@ -1,0 +1,131 @@
+<!-- Fastboot page -->
+<page name="fastboot_v2">
+    <background color="%background%"/>
+    <template name="keys"/>
+    <action>
+        <action function="set">tw_back=advanced</action>
+    </action>
+
+    <action>
+        <condition var1="tw_fb_busy" var2="0"/>
+        <condition var1="tw_fb_mtp_orig" var2="1"/>
+        <condition var1="tw_mtp_enabled" var2="0"/>
+        <condition var1="fox_adb" var2="0"/>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+        <action function="startmtp"/>
+    </action>
+
+    <action>
+        <condition var1="tw_fb_busy" var2="0"/>
+        <condition var1="tw_fb_adb_orig" var2="1"/>
+        <condition var1="tw_fb_mtp_orig" var2="0"/>
+        <condition var1="fox_adb" var2="0"/>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+    </action>
+
+    <console>
+        <placement x="%col1_x%" y="%console_ab_y%" w="%console_width%" h="1428"/>
+        <condition var1="use_fixed_font" var2="0"/>
+    </console>
+
+    <console>
+        <placement x="%col1_x%" y="%console_ab_y%" w="%console_width%" h="1428"/>
+        <condition var1="use_fixed_font" var2="1"/>
+        <font resource="fixed"/>
+    </console>
+
+    <animation>
+        <condition var1="tw_fb_busy" var2="1"/>
+        <condition var1="ui_progress" var2="100"/>
+        <placement x="%progressbar_x%" y="%ab_h%"/>
+        <resource name="progress"/>
+        <speed fps="60" render="1"/>
+        <loop frame="1"/>
+    </animation>
+
+    <template name="ab_main"/>
+    <template name="statusbarinfo"/>
+
+    <!-- Back -->
+    <button style="actionbar">
+        <condition var1="tw_fb_busy" var2="0"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="key">back</action>
+        <action function="page">%tw_back%</action>
+    </button>
+
+    <image>
+        <condition var1="tw_fb_busy" var2="0"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <image resource="actionbar_back"/>
+    </image>
+
+    <!-- Cancel -->
+    <button style="actionbar">
+        <condition var1="tw_fb_busy" var2="1"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="set">tw_enable_adb=1</action>
+        <action function="set">tw_enable_fastboot=0</action>
+        <action function="set">tw_fb_busy=0</action>
+        <action function="set">ui_progress=0</action>
+        <action function="set">tw_back=advanced</action>
+    </button>
+
+    <image>
+        <condition var1="tw_fb_busy" var2="1"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <image resource="actionbar_cancel"/>
+    </image>
+
+    <text style="text_ab_title">
+        <placement x="%col1_x_indent%" y="%ab_bc_y%"/>
+        <text>{@fastboot_button}</text>
+    </text>
+
+    <!-- Buttons -->
+    <button style="btn_raised">
+        <placement x="%btn_raised_left_x%" y="1764"/>
+        <text>{@reboot_btn}</text>
+        <action function="overlay">reboot</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_enable_adb" var2="1"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>{@enable_fastboot}</text>
+        <action function="stopmtp"/>
+        <action function="adb">disable</action>
+        <action function="enablefastboot"/>
+        <action function="set">tw_enable_fastboot=1</action>
+        <action function="set">tw_enable_adb=0</action>
+        <action function="set">ui_progress=100</action>
+        <action function="set">tw_fb_busy=1</action>
+        <action function="set">tw_back=fastboot</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_fb_mtp_orig" var2="0"/>
+        <condition var1="tw_enable_fastboot" var2="1"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>{@enable_adb}</text>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+        <action function="set">tw_enable_adb=1</action>
+        <action function="set">tw_enable_fastboot=0</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_fb_mtp_orig" var2="1"/>
+        <condition var1="tw_enable_fastboot" var2="1"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>{@enable_adb}</text>
+        <action function="adb">enable</action>
+        <action function="enableadb"/>
+        <action function="startmtp"/>
+        <action function="set">tw_enable_adb=1</action>
+        <action function="set">tw_enable_fastboot=0</action>
+    </button>
+</page>
+<!-- /Fastboot page -->

@@ -1,0 +1,11 @@
+<!-- Fastboot item -->
+<listitem name="{@fastboot_button}">
+    <icon res="reboot_fastboot"/>
+    <action function="set">tw_enable_adb=1</action>
+    <action function="set">tw_enable_fastboot=0</action>
+    <action function="page">fastboot_v2</action>
+    <action function="set">tw_fb_busy=0</action>
+    <action function="set">tw_fb_mtp_orig=%tw_mtp_enabled%</action>
+    <action function="set">tw_fb_adb_orig=%fox_adb%</action>
+</listitem>
+<!-- /Fastboot item -->
