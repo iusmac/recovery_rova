@@ -28,3 +28,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.keystore=msm8937 \
     ro.hardware.gatekeeper=msm8937
+
+# Fastboot
+PRODUCT_PACKAGES += \
+    fastboot

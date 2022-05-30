@@ -11,6 +11,12 @@ function main() {
 
         __processPatch__ 'bootable/recovery' "$file" || exit $?
     done
+
+    for patch in \
+        system_core-Build-fastboot-binary.patch
+    do
+        __processPatch__ 'system/core' "$patch" || exit $?
+    done
 }
 
 function __processPatch__() {
