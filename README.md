@@ -49,8 +49,8 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 ### Dependencies
 - *Kernel*: https://github.com/iusmac/kernel_rova
 _(place to kernel/xiaomi/rova)_
-- *Clang*: https://gitlab.com/iusmac/android_prebuilts_clang_host_linux-x86_clang-r437112b
-_(place to prebuilts/clang/host/linux-x86/clang-r437112b)_
+- *Clang*: https://gitlab.com/iusmac/android_prebuilts_clang_host_linux-x86_clang-r445002
+_(place to prebuilts/clang/host/linux-x86/clang-r445002)_
 - *QCOM commonsys*: https://github.com/TeamWin/android_vendor_qcom_opensource_commonsys
 _(place to vendor/qcom/opensource/commonsys)_
 
