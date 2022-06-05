@@ -7,7 +7,7 @@ function main() {
         bootable_recovery-Fix-keymaster-on-A12.patch \
         bootable_recovery-Add-FBE-alert.patch
     do
-        file="ofox-10.0/$patch"
+        file="ofox-11.0/$patch"
 
         __processPatch__ 'bootable/recovery' "$file" || exit $?
     done

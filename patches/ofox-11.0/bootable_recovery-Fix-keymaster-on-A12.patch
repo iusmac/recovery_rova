@@ -1,84 +1,16 @@
-diff --git a/crypto/ext4crypt/Keymaster3.cpp b/crypto/ext4crypt/Keymaster3.cpp
-index 7862044..3338e2e 100644
---- a/crypto/ext4crypt/Keymaster3.cpp
-+++ b/crypto/ext4crypt/Keymaster3.cpp
-@@ -25,6 +25,8 @@
- #define ERROR 1
- #define LOG(x) std::cout
- 
-+static const std::string kPkmBlob("pKMblob\x00", 8);
-+
- using namespace ::keystore;
- using android::hardware::hidl_string;
- 
-@@ -179,6 +181,14 @@ KeymasterOperation Keymaster::begin(KeyPurpose purpose, const std::string& key,
-         mOpHandle = operationHandle;
-     };
- 
-+    // In A12 keymaster_key_blob format changed:
-+    // it have useless for us bytes in beginning, so remove them to correctly handle key
-+    std::string kmKey = dump::toString(keyBlob);
-+    if (!kmKey.compare(0, kPkmBlob.size(), kPkmBlob)) {
-+        kmKey.erase(0, kPkmBlob.size());
-+        keyBlob = blob2hidlVec(kmKey);
-+    }
-+
-     auto error = mDevice->begin(purpose, keyBlob, inParams.hidl_data(), hidlCb);
-     if (!error.isOk()) {
-         LOG(ERROR) << "begin failed: " << error.description();
-diff --git a/crypto/ext4crypt/Keymaster3.h b/crypto/ext4crypt/Keymaster3.h
-index cb5b644..0eb4bbb 100644
---- a/crypto/ext4crypt/Keymaster3.h
-+++ b/crypto/ext4crypt/Keymaster3.h
-@@ -111,6 +111,34 @@ class Keymaster {
-     DISALLOW_COPY_AND_ASSIGN(Keymaster);
- };
- 
-+namespace dump {
-+
-+template<typename T>
-+std::string toHexString(T t, bool prefix = true) {
-+    std::ostringstream os;
-+    if (prefix) { os << std::showbase; }
-+    os << std::hex << t;
-+    return os.str();
-+}
-+
-+template<typename Array>
-+std::string arrayToHexString(const Array &a, size_t size) {
-+    using android::hardware::toString;
-+    std::string os;
-+    for (size_t i = 0; i < size; ++i) {
-+        os += toHexString(a[i]);
-+    }
-+    return os;
-+}
-+
-+template<typename T>
-+std::string toString(const hardware::hidl_vec<T> &a) {
-+    std::string os;
-+    os += arrayToHexString(a, a.size());
-+    return os;
-+}
-+
-+}  // namespace dump
- }  // namespace vold
- }  // namespace android
- 
 diff --git a/crypto/fde/cryptfs.cpp b/crypto/fde/cryptfs.cpp
-index 2d1595f..6b8f70e 100644
+index fa0dc78..69c66ef 100644
 --- a/crypto/fde/cryptfs.cpp
 +++ b/crypto/fde/cryptfs.cpp
-@@ -112,6 +112,8 @@ constexpr size_t INTERMEDIATE_BUF_SIZE =
+@@ -107,6 +107,7 @@ constexpr size_t INTERMEDIATE_BUF_SIZE =
  static_assert(INTERMEDIATE_BUF_SIZE == SCRYPT_LEN,
                "Mismatch of intermediate key sizes");
  
 +static const std::string kPkmBlob("pKMblob\x00", 8);
-+
  #define KEY_IN_FOOTER  "footer"
  
  #define DEFAULT_HEX_PASSWORD "64656661756c745f70617373776f7264"
-@@ -428,6 +430,14 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
+@@ -423,6 +424,14 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
  
      int rc = -1;
  
@@ -93,7 +25,7 @@ index 2d1595f..6b8f70e 100644
  #if TW_KEYMASTER_MAX_API >= 1
      keymaster0_device_t *keymaster0_dev = 0;
      keymaster1_device_t *keymaster1_dev = 0;
-@@ -447,8 +457,8 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
+@@ -442,8 +451,8 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
  
          rc = keymaster0_dev->sign_data(keymaster0_dev,
                                        &params,
@@ -104,7 +36,7 @@ index 2d1595f..6b8f70e 100644
                                        to_sign,
                                        to_sign_size,
                                        signature,
-@@ -457,7 +467,6 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
+@@ -452,7 +461,6 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
      }
  #if TW_KEYMASTER_MAX_API >= 1
      else if (keymaster1_dev) {
@@ -112,7 +44,7 @@ index 2d1595f..6b8f70e 100644
          keymaster_key_param_t params[] = {
              keymaster_param_enum(KM_TAG_PADDING, KM_PAD_NONE),
              keymaster_param_enum(KM_TAG_DIGEST, KM_DIGEST_NONE),
-@@ -513,7 +522,6 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
+@@ -508,7 +516,6 @@ static int keymaster_sign_object(struct crypt_mnt_ftr *ftr,
          rc = 0;
      }
      else if (keymaster2_dev) {
@@ -121,19 +53,18 @@ index 2d1595f..6b8f70e 100644
              keymaster_param_enum(KM_TAG_PADDING, KM_PAD_NONE),
              keymaster_param_enum(KM_TAG_DIGEST, KM_DIGEST_NONE),
 diff --git a/crypto/fscrypt/Keymaster.cpp b/crypto/fscrypt/Keymaster.cpp
-index 706181d..e90f175 100755
+index c5b7bc3..13df388 100755
 --- a/crypto/fscrypt/Keymaster.cpp
 +++ b/crypto/fscrypt/Keymaster.cpp
-@@ -20,6 +20,8 @@
- #include <keymasterV4_0/authorization_set.h>
- #include <keymasterV4_0/keymaster_utils.h>
+@@ -20,6 +20,7 @@
+ #include <keymasterV4_1/authorization_set.h>
+ #include <keymasterV4_1/keymaster_utils.h>
  
 +static const std::string kPkmBlob("pKMblob\x00", 8);
-+
- namespace android {
- namespace vold {
  
-@@ -217,6 +219,14 @@ KeymasterOperation Keymaster::begin(km::KeyPurpose purpose, const std::string& k
+ using ::android::hardware::hidl_string;
+ using ::android::hardware::hidl_vec;
+@@ -210,6 +211,14 @@ KeymasterOperation Keymaster::begin(km::KeyPurpose purpose, const std::string& k
          mOpHandle = operationHandle;
      };
  

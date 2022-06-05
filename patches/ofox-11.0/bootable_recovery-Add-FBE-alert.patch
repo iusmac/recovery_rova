@@ -1,8 +1,8 @@
 diff --git a/twrp.cpp b/twrp.cpp
-index 494cedc..e7811d8 100644
+index 3ce344e..1507772 100644
 --- a/twrp.cpp
 +++ b/twrp.cpp
-@@ -83,8 +83,24 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
+@@ -85,8 +85,24 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
  		} else if (DataManager::GetIntValue(TW_CRYPTO_PWTYPE) != 0) {
  			DataManager::SetValue(FOX_ENCRYPTED_DEVICE, "1");
  			LOGINFO("Is encrypted, do decrypt page first\n");

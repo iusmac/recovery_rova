@@ -12,7 +12,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 
 2. **Clone Rova Builder:**
     ```console
-    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-10.0
+    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-11.0
     $ cd rova_builder
     ```
 
@@ -51,8 +51,6 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 _(place to kernel/xiaomi/rova)_
 - *Clang*: https://gitlab.com/iusmac/android_prebuilts_clang_host_linux-x86_clang-r445002
 _(place to prebuilts/clang/host/linux-x86/clang-r445002)_
-- *QCOM commonsys*: https://github.com/TeamWin/android_vendor_qcom_opensource_commonsys
-_(place to vendor/qcom/opensource/commonsys)_
 
 _NOTE: those are automatically downloaded when using Rova Builder_
 

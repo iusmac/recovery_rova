@@ -1,8 +1,18 @@
+From 0c17d993b21131a1dabcc9204fc6fbaff9362378 Mon Sep 17 00:00:00 2001
+From: me-cafebabe <me_cafebabe@hotmail.com>
+Date: Wed, 25 May 2022 19:09:06 +0800
+Subject: [PATCH] fastboot
+
+Change-Id: I91ef5b41a094e1d0de0ffe610f3382525d40fcfe
+---
+ fastboot/Android.bp | 79 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 76 insertions(+), 3 deletions(-)
+
 diff --git a/fastboot/Android.bp b/fastboot/Android.bp
-index 716fe95..20fa9f4 100644
+index cf0f1ac..ff0cd72 100644
 --- a/fastboot/Android.bp
 +++ b/fastboot/Android.bp
-@@ -208,7 +208,7 @@ cc_defaults {
+@@ -221,7 +221,7 @@ cc_defaults {
  //
  
  cc_library_host_static {
@@ -11,7 +21,7 @@ index 716fe95..20fa9f4 100644
      defaults: ["fastboot_host_defaults"],
  
      srcs: [
-@@ -248,11 +248,11 @@ cc_library_host_static {
+@@ -261,11 +261,11 @@ cc_library_host_static {
  //
  
  cc_binary_host {
@@ -25,25 +35,12 @@ index 716fe95..20fa9f4 100644
  
      required: [
          "mke2fs",
-@@ -307,5 +307,86 @@ cc_test_host {
-             // Avoid trying to build for win64
-             enabled: false,
+@@ -322,3 +322,76 @@ cc_test_host {
          },
-+        windows_x86: {
-+            // Avoid trying to build for win32
-+            enabled: false,
-+        },
-+        linux: {
-+            // Prevent error: missing variant: arch:linux_glibc_x86_64
-+            enabled: false,
-+        },
      },
  }
 +
-+//
-+// Build fastboot for Android
-+//
-+
++// Fastboot on Android
 +cc_defaults {
 +    name: "fastboot_android_defaults",
 +
@@ -64,7 +61,10 @@ index 716fe95..20fa9f4 100644
 +    // will violate ODR.
 +    shared_libs: ["libcrypto"],
 +
-+    header_libs: ["bootimg_headers"],
++    header_libs: [
++        "avb_headers",
++        "bootimg_headers",
++    ],
 +
 +    static_libs: [
 +        "libziparchive",
@@ -112,24 +112,7 @@ index 716fe95..20fa9f4 100644
 +    srcs: ["main.cpp"],
 +    static_libs: ["libfastboot"],
 +}
-diff --git a/fastboot/socket.h b/fastboot/socket.h
-index e791f2c..5200462 100644
---- a/fastboot/socket.h
-+++ b/fastboot/socket.h
-@@ -40,7 +40,6 @@
- 
- #include <android-base/macros.h>
- #include <cutils/sockets.h>
--#include <gtest/gtest_prod.h>
- 
- // Socket interface to be implemented for each platform.
- class Socket {
-@@ -119,8 +118,5 @@ class Socket {
-             socket_send_buffers_function_ = &socket_send_buffers;
- 
-   private:
--    FRIEND_TEST(SocketTest, TestTcpSendBuffers);
--    FRIEND_TEST(SocketTest, TestUdpSendBuffers);
--
-     DISALLOW_COPY_AND_ASSIGN(Socket);
- };
+\ No newline at end of file
+--
+2.30.2
+

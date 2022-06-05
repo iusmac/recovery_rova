@@ -22,7 +22,7 @@ PRODUCT_RELEASE_NAME := rova
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_minimal.mk)
 
 # Inherit common product files
-$(call inherit-product, vendor/omni/config/common.mk)
+$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Inherit from device
 $(call inherit-product, device/xiaomi/$(PRODUCT_RELEASE_NAME)/device.mk)
@@ -31,7 +31,7 @@ $(call inherit-product, device/xiaomi/$(PRODUCT_RELEASE_NAME)/device.mk)
 BOARD_VENDOR := Xiaomi
 PRODUCT_BRAND := $(BOARD_VENDOR)
 PRODUCT_DEVICE := $(PRODUCT_RELEASE_NAME)
-PRODUCT_NAME := omni_$(PRODUCT_RELEASE_NAME)
+PRODUCT_NAME := twrp_$(PRODUCT_RELEASE_NAME)
 PRODUCT_MANUFACTURER := $(BOARD_VENDOR)
 PRODUCT_MODEL := Redmi 4A/5A
 TARGET_VENDOR := $(BOARD_VENDOR)

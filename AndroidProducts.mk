@@ -16,9 +16,9 @@
 #
 
 PRODUCT_MAKEFILES := \
-	$(LOCAL_DIR)/omni_rova.mk
+	$(LOCAL_DIR)/twrp_rova.mk
 
 COMMON_LUNCH_CHOICES := \
-	omni_rova-user \
-	omni_rova-userdebug \
-	omni_rova-eng
+	twrp_rova-user \
+	twrp_rova-userdebug \
+	twrp_rova-eng
