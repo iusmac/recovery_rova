@@ -25,6 +25,9 @@ PRODUCT_PACKAGES += \
     qcom_decrypt \
     qcom_decrypt_fbe
 
+PRODUCT_SOONG_NAMESPACES += \
+    $(LOCAL_PATH)/cryptfs_hw
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.keystore=msm8937 \
     ro.hardware.gatekeeper=msm8937

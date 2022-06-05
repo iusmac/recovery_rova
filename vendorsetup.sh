@@ -98,3 +98,6 @@ curl \
 echo "Latest Magisk has been saved to: $file_name"
 
 export FOX_USE_SPECIFIC_MAGISK_ZIP="$file_name"
+
+# Cryptfs_hw
+rm -rf vendor/qcom/opensource/cryptfs_hw
