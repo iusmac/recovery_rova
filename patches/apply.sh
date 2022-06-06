@@ -17,6 +17,12 @@ function main() {
     do
         __processPatch__ 'system/core' "$patch" || exit $?
     done
+
+    for patch in \
+        bootable_recovery-Render-UI-at-60-FPS.patch
+    do
+        __processPatch__ 'bootable/recovery' "$patch" || exit $?
+    done
 }
 
 function __processPatch__() {

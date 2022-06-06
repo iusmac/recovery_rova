@@ -30,6 +30,7 @@ function main() {
             addUSBStorageExporterToMount
             addEMMCLifetimeToPartMgr
             addFastbootItemToMenu
+            increaseUIRenderingTo60FPS
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -244,6 +245,17 @@ function addFastbootItemToMenu() {
     # Insert our page at the end
     line="$(__getMatchLineNr__ '<\/pages>' "$advanced_xml")" || exit $?
     sed -i "$((line - 1)) r $page" "$advanced_xml"
+}
+
+function increaseUIRenderingTo60FPS() {
+    echo -e "${GREY}-- Increasing UI rendering to 60 FPS... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local pages=$TWRES_DIR/pages
+
+    for page in main.xml templates/base.xml files.xml; do
+        __sedReplace__ 's/fps="30"/fps="60"/g' "$pages/$page"
+    done
 }
 
 # Inherit some colour codes form vendor/recovery
