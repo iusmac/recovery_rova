@@ -36,6 +36,7 @@ function main() {
             OF_WORKING_DIR="$1"
             assertRamdiskIsSmallerThan 20 # MiB
             copyVimToZip
+            copyPythonToZip
     esac
 }
 
@@ -256,6 +257,11 @@ function increaseUIRenderingTo60FPS() {
     for page in main.xml templates/base.xml files.xml; do
         __sedReplace__ 's/fps="30"/fps="60"/g' "$pages/$page"
     done
+}
+
+function copyPythonToZip() {
+    echo -e "${GREY}-- Installing Python... ${NC}"
+    cp -a "$SCRIPT_DIR"/prebuilt/python3 "$OF_WORKING_DIR/sdcard/Fox/FoxFiles"
 }
 
 # Inherit some colour codes form vendor/recovery

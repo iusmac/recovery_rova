@@ -49,5 +49,7 @@ InitFox() {
     }${green}\${HOSTNAME}${NC}:${blue}\${PWD:-?}${NC}${PS1} "
 }
 
+export IS_ORANGEFOX_USER_TERM=true
+
 InitFox;
 # OrangeFox

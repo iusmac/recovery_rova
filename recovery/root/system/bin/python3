@@ -1,0 +1,25 @@
+#!/sbin/sh
+
+python_bin=/sdcard/Fox/FoxFiles/python3/bin/python3
+
+if [ -e $python_bin ]; then
+    chmod 0755 $python_bin
+else
+    echo 'Python binary is missing. Try reinstalling OrangeFox using .zip archive.' >&2
+    exit 1
+fi
+
+# Check if we're in OrangeFox's embedded Terminal
+if [ -n "$ANDROID_SOCKET_recovery" ] && [ -n "$IS_ORANGEFOX_USER_TERM" ]; then
+    # Fix Backspace in Python console which understands only ^H (0x8) code.
+    # Note: new shell session is needed to isolate stty changes because
+    # restoring output from -g arg is broken.
+    # Bug ref: https://github.com/landley/toybox/issues/188
+    backspace_hex=$'\x8'
+    sh -c 'stty erase '$backspace_hex' \
+        ignbrk brkint -ignpar -parmrk -inpck \
+        -istrip -inlcr -igncr icrnl \
+        ixon >/dev/null; '$python_bin' "$@"' _ "$@"
+else
+    $python_bin "$@"
+fi
