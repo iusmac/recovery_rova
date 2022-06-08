@@ -31,6 +31,7 @@ function main() {
             addEMMCLifetimeToPartMgr
             addFastbootItemToMenu
             increaseUIRenderingTo60FPS
+            addDarkLightModeToggler
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -262,6 +263,26 @@ function increaseUIRenderingTo60FPS() {
 function copyPythonToZip() {
     echo -e "${GREY}-- Installing Python... ${NC}"
     cp -a "$SCRIPT_DIR"/prebuilt/python3 "$OF_WORKING_DIR/sdcard/Fox/FoxFiles"
+}
+
+function addDarkLightModeToggler() {
+    echo -e "${GREY}-- Adding Dark/Light Mode Toggler... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local anywhere_xml=$TWRES_DIR/pages/anywhere.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line buttons="$local_pages/anywhere-theme-toggler.xml"
+
+    sed -i -e '/<!-- Theme toggler buttons -->/,/<!-- \/Theme toggler buttons -->/ d' \
+        "$anywhere_xml"
+
+    line="$(__getMatchLineNr__ '<slidervalue>' "$anywhere_xml")" || exit $?
+    sed -i "$((line - 1)) r $buttons" "$anywhere_xml"
+
+    # Also adjust the brightness slider to fit the toggler button
+    local old='<placement x="-24" y="%console_brightness_y%" w="%slidervalue_w%" \/>'
+    local new='<placement x="105" y="%console_brightness_y%" w="870" \/>'
+    __sedReplace__ "s/$old/$new/" "$anywhere_xml"
 }
 
 # Inherit some colour codes form vendor/recovery
