@@ -32,6 +32,7 @@ function main() {
             addFastbootItemToMenu
             increaseUIRenderingTo60FPS
             addDarkLightModeToggler
+            makeLockscreenBGSemiTransparent
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -283,6 +284,16 @@ function addDarkLightModeToggler() {
     local old='<placement x="-24" y="%console_brightness_y%" w="%slidervalue_w%" \/>'
     local new='<placement x="105" y="%console_brightness_y%" w="870" \/>'
     __sedReplace__ "s/$old/$new/" "$anywhere_xml"
+}
+
+function makeLockscreenBGSemiTransparent() {
+    echo -e "${GREY}-- Making lockscreen background semi-transparent... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local line anywhere_xml=$TWRES_DIR/pages/anywhere.xml
+
+    line="$(__getMatchLineNr__ '<page name="lock">' "$anywhere_xml")" || exit $?
+    __sedReplace__ "$((line + 1)) s/%background%/%darktransparent%/" "$anywhere_xml"
 }
 
 # Inherit some colour codes form vendor/recovery
