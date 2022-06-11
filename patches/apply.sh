@@ -6,7 +6,8 @@ function main() {
     for patch in \
         bootable_recovery-Fix-keymaster-on-A12.patch \
         bootable_recovery-Add-FBE-alert.patch \
-        bootable_recovery-Fix-double-bind-mounting-data-media.patch
+        bootable_recovery-Fix-double-bind-mounting-data-media.patch \
+        bootable_recovery-Fix-the-progress-bar.patch
     do
         file="ofox-11.0/$patch"
 

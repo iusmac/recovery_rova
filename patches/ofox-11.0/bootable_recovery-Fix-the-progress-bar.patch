@@ -1,0 +1,97 @@
+From 20c98b0a8e289b1b70d9ebd823caad91337145b7 Mon Sep 17 00:00:00 2001
+From: Steve Kondik <shade@chemlab.org>
+Date: Fri, 12 Sep 2014 18:52:28 -0700
+Subject: [PATCH] Fix the progress bar
+
+* The progress thread is running all the time, which causes the device
+  to heat up while in recovery. Start this thread only when the progress
+  mode is set to something other than EMPTY, and add a terminating
+  condition so that it exits when finished.
+
+* Incorporate Tom's patch to keep it updated when visible, since both
+  are needed to get working progress indications without killing
+  batteries.
+
+* Clear buffer in draw_progress_locked() and always call this in
+  update_progress_locked().  This is necessary to ensure that all
+  backing frames in the graphics implementation get updated because we
+  aren't guaranteed to have any particular number of backing frames.
+
+* Remove dialogs on wipe operations since we are using the progress
+  animation now.
+
+iusmac: adapt to Android 11 sources
+
+Signed-off-by: iusmac <iusico.maxim@libero.it>
+---
+ recovery_ui/screen_ui.cpp | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
+index 087fc0e..50395e1 100644
+--- a/recovery_ui/screen_ui.cpp
++++ b/recovery_ui/screen_ui.cpp
+@@ -443,6 +443,8 @@ void ScreenRecoveryUI::draw_background_locked() {
+ // called with updateMutex locked.
+ void ScreenRecoveryUI::draw_foreground_locked() {
+   if (current_icon_ != NONE) {
++    gr_color(0, 0, 0, 255);
++    gr_clear();
+     const auto& frame = GetCurrentFrame();
+     int frame_width = gr_get_width(frame);
+     int frame_height = gr_get_height(frame);
+@@ -753,12 +755,7 @@ void ScreenRecoveryUI::update_screen_locked() {
+ // Updates only the progress bar, if possible, otherwise redraws the screen.
+ // Should only be called with updateMutex locked.
+ void ScreenRecoveryUI::update_progress_locked() {
+-  if (show_text || !pagesIdentical) {
+-    draw_screen_locked();  // Must redraw the whole screen
+-    pagesIdentical = true;
+-  } else {
+-    draw_foreground_locked();  // Draw only the progress bar and overlays
+-  }
++  draw_foreground_locked();
+   gr_flip();
+ }
+ 
+@@ -772,7 +769,7 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
+ 
+       // update the installation animation, if active
+       // skip this if we have a text overlay (too expensive to update)
+-      if ((current_icon_ == INSTALLING_UPDATE || current_icon_ == ERASING) && !show_text) {
++      if ((current_icon_ == INSTALLING_UPDATE || current_icon_ == ERASING)) {
+         if (!intro_done_) {
+           if (current_frame_ == intro_frames_.size() - 1) {
+             intro_done_ = true;
+@@ -802,6 +799,8 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
+       if (redraw) update_progress_locked();
+     }
+ 
++    if (progressBarType == EMPTY) break;
++
+     double end = now();
+     // minimum of 20ms delay between frames
+     double delay = interval - (end - start);
+@@ -926,9 +925,6 @@ bool ScreenRecoveryUI::Init(const std::string& locale) {
+ 
+   LoadAnimation();
+ 
+-  // Keep the progress bar updated, even when the process is otherwise busy.
+-  progress_thread_ = std::thread(&ScreenRecoveryUI::ProgressThreadLoop, this);
+-
+   return true;
+ }
+ 
+@@ -987,6 +983,9 @@ void ScreenRecoveryUI::SetProgressType(ProgressType type) {
+   std::lock_guard<std::mutex> lg(updateMutex);
+   if (progressBarType != type) {
+     progressBarType = type;
++    if (progressBarType != EMPTY) {
++      progress_thread_ = std::thread(&ScreenRecoveryUI::ProgressThreadLoop, this);
++    }
+   }
+   progressScopeStart = 0;
+   progressScopeSize = 0;
+-- 
+2.32.0
+
