@@ -51,6 +51,7 @@ export ALLOW_MISSING_DEPENDENCIES=true
 export FOX_REMOVE_AAPT='1'
 export FOX_LOCAL_CALLBACK_SCRIPT="$SCRIPT_DIR/localCallback.sh"
 export TARGET_DEVICE_ALT='rolex,riva'
+export OF_NO_SPLASH_CHANGE=1
 
 # export OF_DISABLE_DM_VERITY_FORCED_ENCRYPTION='1';
 # Disabling dm-verity causes stability issues with some kernel 4.9 ROMs; but is
