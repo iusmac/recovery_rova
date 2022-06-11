@@ -1,0 +1,38 @@
+From d9e751727a079d6278e366907cb5a0a61c16806a Mon Sep 17 00:00:00 2001
+From: iusmac <iusico.maxim@libero.it>
+Date: Sat, 11 Jun 2022 18:56:17 +0200
+Subject: [PATCH] gui: Save screenshot to /tmp/screenshots if /sdcard is not
+ mounted
+
+* this vicious circle is quite annoying when bugs occur in the /data
+  partition and you cannot take a screenshot of it, because it shall be
+  saved somewhere in /data itself.
+* this has been already implemented in stock TWRP time ago, idk why
+  OrangeFox nuked it...
+
+Signed-off-by: iusmac <iusico.maxim@libero.it>
+---
+ gui/action.cpp | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/gui/action.cpp b/gui/action.cpp
+index f706be5..fbd513e 100755
+--- a/gui/action.cpp
++++ b/gui/action.cpp
+@@ -1387,8 +1387,11 @@ int GUIAction::screenshot(std::string arg __unused)
+ 	//} else
+ 	strcpy(path, "/sdcard/Fox/screenshots/");
+ 
+-	if (!TWFunc::Create_Dir_Recursive(path, 0775, uid, gid))
+-		return 0;
++	if (!TWFunc::Create_Dir_Recursive(path, 0775, uid, gid)) {
++		strcpy(path, "/tmp/screenshots/");
++		if (!TWFunc::Create_Dir_Recursive(path, 0775, uid, gid))
++			return 0;
++	}
+ 
+ 	tm = time(NULL);
+ 	path_len = strlen(path);
+-- 
+2.32.0
+

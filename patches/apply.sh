@@ -7,7 +7,8 @@ function main() {
         bootable_recovery-Fix-keymaster-on-A12.patch \
         bootable_recovery-Add-FBE-alert.patch \
         bootable_recovery-Fix-double-bind-mounting-data-media.patch \
-        bootable_recovery-Fix-the-progress-bar.patch
+        bootable_recovery-Fix-the-progress-bar.patch \
+        bootable_recovery-Save-screenshot-to-tmp-screenshots-if-sdcard-is-not-mounted.patch
     do
         file="ofox-11.0/$patch"
 
