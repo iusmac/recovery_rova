@@ -6,17 +6,17 @@
 
         case "$lifetime_hex" in
             *0) lifetime='Undefined';;
-            *1) lifetime='~0-10 Percent';;
-            *2) lifetime='~10-20 Percent';;
-            *3) lifetime='~20-30 Percent';;
-            *4) lifetime='~30-40 Percent';;
-            *5) lifetime='~40-50 Percent';;
-            *6) lifetime='~50-60 Percent';;
-            *7) lifetime='~60-70 Percent';;
-            *8) lifetime='~70-80 Percent';;
-            *9) lifetime='~80-90 Percent';;
-            *a | *A) lifetime='~90-100 Percent';;
-            *b | *B) lifetime='>100 Percent';;
+            *1) lifetime='~0-10percent';; 
+            *2) lifetime='~10-20percent';; 
+            *3) lifetime='~20-30percent';; 
+            *4) lifetime='~30-40percent';; 
+            *5) lifetime='~40-50percent';; 
+            *6) lifetime='~50-60percent';; 
+            *7) lifetime='~60-70percent';; 
+            *8) lifetime='~70-80percent';; 
+            *9) lifetime='~80-90percent';; 
+            *a | *A) lifetime='~90-100percent';; 
+            *b | *B) lifetime='>100percent';; 
             *) lifetime='Reserved'
         esac
 
@@ -28,7 +28,7 @@
             *) eol='Reserved'
         esac
 
-        twrp xset emmc_lifetime="$lifetime"
+        twrp xset emmc_lifetime="${lifetime/percent/&#x25;}"
         twrp xset emmc_lifetime_eol="$eol"
     </action>
 </action>
