@@ -1,0 +1,46 @@
+From c1e47423ee1d4bde1967f037ba4bb2fda0b71167 Mon Sep 17 00:00:00 2001
+From: iusmac <iusico.maxim@libero.it>
+Date: Thu, 16 Jun 2022 20:24:35 +0200
+Subject: [PATCH] data: Concatenate battery temperature with CPU temperature
+
+Signed-off-by: iusmac <iusico.maxim@libero.it>
+---
+ data.cpp | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/data.cpp b/data.cpp
+index 4a98309..ee3e1f4 100755
+--- a/data.cpp
++++ b/data.cpp
+@@ -1369,8 +1369,10 @@ int DataManager::GetMagicValue(const string & varName, string & value)
+       if (tw_no_cpu_temp == 1)
+ 	return -1;
+ 
++      char tmp[18];
+       string cpu_temp_file;
+       static unsigned long convert_temp = 0;
++      static unsigned long convert_temp_batt = 0;
+       static time_t cpuSecCheck = 0;
+       struct timeval curTime;
+       string results;
+@@ -1392,9 +1394,16 @@ int DataManager::GetMagicValue(const string & varName, string & value)
+ 	    convert_temp = strtoul(results.c_str(), NULL, 0);
+ 	  if (convert_temp >= 150)
+ 	    convert_temp = strtoul(results.c_str(), NULL, 0) / 10;
++
++	  if (TWFunc::read_file("/sys/class/power_supply/battery/temp", results) != 0)
++	    return -1;
++
++	  convert_temp_batt = strtoul(results.c_str(), NULL, 0) / 10;
++
+ 	  cpuSecCheck = curTime.tv_sec + 5;
+ 	}
+-      value = TWFunc::to_string(convert_temp);
++      sprintf(tmp, "%lu °C | BATT: %lu", convert_temp, convert_temp_batt);
++      value = tmp;
+       return 0;
+     }
+   else if (varName == "tw_battery" || varName == "tw_battery_charge")
+-- 
+2.32.0
+

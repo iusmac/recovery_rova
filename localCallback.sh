@@ -34,6 +34,7 @@ function main() {
             addDarkLightModeToggler
             makeLockscreenBGSemiTransparent
             removeUnusedSplashImages
+            bindBatteryTempToShowCPUTemp
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -311,6 +312,17 @@ function removeUnusedSplashImages() {
             rm $f && ln -s empty.png $f
         done
     )
+}
+
+function bindBatteryTempToShowCPUTemp() {
+    echo -e "${GREY}-- Binding Battery Temperature with CPU Temperature... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local custom_xml=$TWRES_DIR/pages/customization.xml
+
+    local old='<listitem name="{@show_cpu_temp_bar}">'
+    local new='<listitem name="{@show_cpu_temp_bar} + {@battery}">'
+    __sedReplace__ "s/$old/$new/" "$custom_xml"
 }
 
 # Inherit some colour codes form vendor/recovery
