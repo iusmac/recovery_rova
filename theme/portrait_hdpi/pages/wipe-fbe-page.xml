@@ -4,6 +4,21 @@
     <template name="statusbarinfo"/>
     <template name="tabs"/>
 
+    <action>
+        <action function="set">tw_back=part_options</action>
+    </action>
+
+    <button style="actionbar">
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="key">back</action>
+        <action function="page">%tw_back%</action>
+    </button>
+
+    <image>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <image resource="actionbar_back"/>
+    </image>
+
     <button style="tab_btn">
         <placement x="156" y="%tab_btn_y%" w="360" h="84"/>
         <text>{@part_menu_hdr}</text>
@@ -76,12 +91,12 @@
 
     <action>
         <touch key="home"/>
-        <action function="page">part_options</action>
+        <action function="page">%tw_back%</action>
     </action>
 
     <action>
         <touch key="back"/>
-        <action function="page">part_options</action>
+        <action function="page">%tw_back%</action>
     </action>
 </page>
 
