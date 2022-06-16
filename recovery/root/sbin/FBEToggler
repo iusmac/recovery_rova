@@ -25,6 +25,92 @@ main() {
         ! $GREP -E -q "$fde_regex" $fstab_file && $GREP -E -q "$fbe_regex" $fstab_file
     }
 
+    disableFBE() {
+        log 'Disabling FBE encryption ...'
+
+        if isFdeEnabled; then
+            log 'FBE has already been disabled!'
+            return 1
+        elif [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
+            log 'Failed to disable FBE due to malformed fstab file!'
+            return 1
+        fi
+
+        return 0
+    }
+
+    enableFBE() {
+        log 'Mounting system ...'
+        mount_part /system_root
+
+        log 'Checking SDK compatibility ...'
+        local sdk; sdk="$(getSdk)"
+
+        if [ -z "$sdk" ]; then
+            sdk=0
+        fi
+
+        local ret
+
+        if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 24 ]; then
+            ret=1; log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
+        else
+            if [ "$sdk" -eq 0 ]; then
+                log 'Cannot detect ROM SDK. Continue anyway.'
+                log 'Keep in mind that only Android 7+ based ROMs support FBE.'
+            elif [ "$sdk" -lt 29 ]; then
+                log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
+            fi
+            log 'Enabling FBE encryption ...'
+
+            local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
+            # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
+            # let's explicitly set it to be compatible across recoveries
+            if [ "$sdk" -ge 30 ]; then
+                fbe_str="${fbe_str}:v1"
+            fi
+            local fde_to_fbe="/\/data/ s/$fde_regex/$fbe_str/g"
+
+            if isFbeEnabled; then
+                ret=1; log 'FBE has already been enabled!'
+            elif [ -z "$($SED -E -i -e "$fde_to_fbe w /dev/stdout" $fstab_file)" ]; then
+                ret=1; log 'Failed to enable FBE due to malformed fstab file!'
+            fi
+        fi
+        log 'Unmounting system ...'
+        umount_part /system_root
+
+        return $ret
+    }
+
+    disableFBEIfEnabled() {
+        if ! isFbeEnabled; then
+            log 'FBE is not enabled. Skipping.'
+        else
+            log 'Disabling FBE encryption ...'
+
+            if [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
+                log 'Failed to disable FBE due to malformed fstab file!'
+                return 1
+            fi
+        fi
+
+        return 0
+    }
+
+    printFBEState() {
+        log 'Detecting FBE state ...'
+        if isFbeEnabled; then
+            log 'FBE is enabled.'
+            echo -n 1
+        else
+            log 'FBE is not enabled.'
+            echo -n 0
+        fi
+
+        return 0
+    }
+
     if [ "$action" != '0' ] &&
         [ "$action" != '1' ] &&
         [ "$action" != '2' ] &&
@@ -50,75 +136,12 @@ main() {
     fi
 
     local code=0
-    if [ "$action" = '0' ]; then # Disable FBE
-        log 'Disabling FBE encryption ...'
-
-        if isFdeEnabled; then
-            code=1
-            log 'FBE has already been disabled!'
-        elif [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
-            code=1
-            log 'Failed to disable FBE due to malformed fstab file!'
-        fi
-    elif [ "$action" = '1' ]; then # Enable FBE
-        log 'Mounting system ...'
-        mount_part /system_root
-
-        log 'Checking SDK compatibility ...'
-        local sdk; sdk="$(getSdk)"
-
-        if [ -z "$sdk" ]; then
-            sdk=0
-        fi
-
-        if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 24 ]; then
-            code=1; log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
-        else
-            if [ "$sdk" -eq 0 ]; then
-                log 'Cannot detect ROM SDK. Continue anyway.'
-                log 'Keep in mind that only Android 7+ based ROMs support FBE.'
-            elif [ "$sdk" -lt 29 ]; then
-                log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
-            fi
-            log 'Enabling FBE encryption ...'
-
-            local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
-            # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
-            # let's explicitly set it to be compatible across recoveries
-            if [ "$sdk" -ge 30 ]; then
-                fbe_str="${fbe_str}:v1"
-            fi
-            local fde_to_fbe="/\/data/ s/$fde_regex/$fbe_str/g"
-
-            if isFbeEnabled; then
-                code=1; log 'FBE has already been enabled!'
-            elif [ -z "$($SED -E -i -e "$fde_to_fbe w /dev/stdout" $fstab_file)" ]; then
-                code=1; log 'Failed to enable FBE due to malformed fstab file!'
-            fi
-        fi
-        log 'Unmounting system ...'
-        umount_part /system_root
-    elif [ "$action" = '2' ]; then # Disable FBE if enabled
-        if ! isFbeEnabled; then
-            log 'FBE is not enabled. Skipping.'
-        else
-            log 'Disabling FBE encryption ...'
-
-            if [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
-                code=1
-                log 'Failed to disable FBE due to malformed fstab file!'
-            fi
-        fi
-    elif [ "$action" = '3' ]; then # Silently print FBE state
-        log 'Detecting FBE state ...'
-        if isFbeEnabled; then
-            log 'FBE is enabled.'
-            echo -n 1
-        else
-            log 'FBE is not enabled.'
-            echo -n 0
-        fi
-    fi
+    case "$action" in
+        0) disableFBE; code=$?;;
+        1) enableFBE; code=$?;;
+        2) disableFBEIfEnabled; code=$?;;
+        3) printFBEState; code=$?
+    esac
 
     log 'Unmounting vendor ...'
     umount_part /vendor
