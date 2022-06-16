@@ -3,7 +3,7 @@
 # ***************************************
 # ******** FBE Encryption Toggler *******
 # ***************************************
-# ** Version: v1.0 ** Date: 21/05/2022 **
+# ** Version: v1.1 ** Date: 16/06/2022 **
 # ***************************************
 # *********** (c) 2022 iusmac ***********
 # ***************************************
@@ -111,10 +111,36 @@ main() {
         return 0
     }
 
+    syncFstabCryptoFlagWithDataEncryption() {
+        log 'Mounting data ...'
+        mount_part /data
+
+        log 'Detecting /data encryption type ...'
+        if [ -f '/data/unencrypted/key/version' ]; then
+            log '/data partition is FBE. Trying enabling FBE ...'
+
+            if isFbeEnabled; then
+                log 'FBE has already been enabled. Skipping.'
+                return 0
+            fi
+
+            enableFBE
+            return $?
+        elif cat /proc/mounts | grep /data | grep -q dm- || [ -d /data/media ]; then
+            log '/data partition is FDE (or it may be in the future). Disabling FBE if ROM has enabled it ...'
+            disableFBEIfEnabled
+            return $?
+        else
+            log 'Unable to detect /data encryption type. Skipping.'
+            return 0
+        fi
+    }
+
     if [ "$action" != '0' ] &&
         [ "$action" != '1' ] &&
         [ "$action" != '2' ] &&
-        [ "$action" != '3' ]; then
+        [ "$action" != '3' ] &&
+        [ "$action" != '4' ]; then
         log "Invalid action: $action"
         return 1
     fi
@@ -140,7 +166,8 @@ main() {
         0) disableFBE; code=$?;;
         1) enableFBE; code=$?;;
         2) disableFBEIfEnabled; code=$?;;
-        3) printFBEState; code=$?
+        3) printFBEState; code=$?;;
+        4) syncFstabCryptoFlagWithDataEncryption; code=$?
     esac
 
     log 'Unmounting vendor ...'
