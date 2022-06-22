@@ -37,6 +37,9 @@ TARGET_BOARD_PLATFORM := msm8937
 TARGET_BOOTLOADER_BOARD_NAME := msm8937
 TARGET_NO_BOOTLOADER := true
 
+# Build
+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
+
 # Display
 TARGET_SCREEN_WIDTH := 768
 TARGET_SCREEN_HEIGHT := 1280
@@ -92,7 +95,6 @@ TARGET_USERIMAGES_USE_F2FS := true
 TW_INCLUDE_NTFS_3G := true
 
 TARGET_RECOVERY_DEVICE_MODULES += \
-    libandroidicu \
     libxml2 \
     vendor.display.config@1.0 \
     vendor.display.config@2.0

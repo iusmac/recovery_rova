@@ -4,14 +4,13 @@
 
 function main() {
     for patch in \
-        bootable_recovery-Fix-keymaster-on-A12.patch \
         bootable_recovery-Add-FBE-alert.patch \
         bootable_recovery-Fix-double-bind-mounting-data-media.patch \
         bootable_recovery-Fix-the-progress-bar.patch \
         bootable_recovery-Save-screenshot-to-tmp-screenshots-if-sdcard-is-not-mounted.patch \
         bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch
     do
-        file="ofox-11.0/$patch"
+        file="ofox-12.1/$patch"
 
         __processPatch__ 'bootable/recovery' "$file" || exit $?
     done

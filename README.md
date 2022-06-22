@@ -12,7 +12,7 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
 
 2. **Clone Rova Builder:**
     ```console
-    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-11.0
+    $ git clone --depth=1 https://github.com/iusmac/rova_builder.git -b orfox-12.1
     $ cd rova_builder
     ```
 

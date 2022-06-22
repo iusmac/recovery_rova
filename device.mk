@@ -15,10 +15,6 @@
 # limitations under the License.
 #
 
-# Apex libraries
-PRODUCT_COPY_FILES += \
-    $(OUT_DIR)/target/product/$(PRODUCT_RELEASE_NAME)/obj/SHARED_LIBRARIES/libandroidicu_intermediates/libandroidicu.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libandroidicu.so
-
 # Encryption
 PRODUCT_PACKAGES += \
     libcryptfs_hw \
@@ -28,10 +24,13 @@ PRODUCT_PACKAGES += \
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH)/cryptfs_hw
 
+PRODUCT_COPY_FILES += \
+    $(OUT_DIR)/target/product/$(PRODUCT_RELEASE_NAME)/obj/SHARED_LIBRARIES/libcryptfs_hw_intermediates/libcryptfs_hw.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libcryptfs_hw.so
+
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.hardware.keystore=msm8937 \
     ro.hardware.gatekeeper=msm8937
 
 # Fastboot
 PRODUCT_PACKAGES += \
-    fastboot
+    fastboot_recovery

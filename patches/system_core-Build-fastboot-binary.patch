@@ -1,48 +1,28 @@
-From 0c17d993b21131a1dabcc9204fc6fbaff9362378 Mon Sep 17 00:00:00 2001
+From fcc945f00759b6867bafd0e84c9a806caf4fe9ba Mon Sep 17 00:00:00 2001
 From: me-cafebabe <me_cafebabe@hotmail.com>
-Date: Wed, 25 May 2022 19:09:06 +0800
-Subject: [PATCH] fastboot
+Date: Thu, 16 Jun 2022 21:52:37 +0800
+Subject: fastboot: Add recovery variant of fastboot client
 
-Change-Id: I91ef5b41a094e1d0de0ffe610f3382525d40fcfe
+Change-Id: I728a093b4ed14067da0567b6c1bab05ba620f511
 ---
- fastboot/Android.bp | 79 +++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 76 insertions(+), 3 deletions(-)
+ fastboot/Android.bp | 88 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
 diff --git a/fastboot/Android.bp b/fastboot/Android.bp
-index cf0f1ac..ff0cd72 100644
+index 2c70778aea..3c80d6caf8 100644
 --- a/fastboot/Android.bp
 +++ b/fastboot/Android.bp
-@@ -221,7 +221,7 @@ cc_defaults {
- //
- 
- cc_library_host_static {
--    name: "libfastboot",
-+    name: "libhfastboot",
-     defaults: ["fastboot_host_defaults"],
- 
-     srcs: [
-@@ -261,11 +261,11 @@ cc_library_host_static {
- //
- 
- cc_binary_host {
--    name: "fastboot",
-+    name: "hfastboot",
-     defaults: ["fastboot_host_defaults"],
- 
-     srcs: ["main.cpp"],
--    static_libs: ["libfastboot"],
-+    static_libs: ["libhfastboot"],
- 
-     required: [
-         "mke2fs",
-@@ -322,3 +322,76 @@ cc_test_host {
-         },
-     },
+@@ -408,3 +408,91 @@ cc_test_host {
+         ":fastboot_test_vendor_boot_v4_with_frag"
+     ],
  }
 +
-+// Fastboot on Android
++//
++// Build recovery fastboot.
++//
++
 +cc_defaults {
-+    name: "fastboot_android_defaults",
++    name: "fastboot_recovery_defaults",
 +
 +    use_version_lib: true,
 +
@@ -52,13 +32,12 @@ index cf0f1ac..ff0cd72 100644
 +        "-Werror",
 +        "-Wunreachable-code",
 +        "-Wno-non-virtual-dtor",
++        "-DANDROID_BASE_UNIQUE_FD_DISABLE_IMPLICIT_CONVERSION",
++        "-D_FILE_OFFSET_BITS=64"
 +    ],
 +
 +    stl: "libc++_static",
 +
-+    // Don't add anything here, we don't want additional shared dependencies
-+    // on the host fastboot tool, and shared libraries that link against libc++
-+    // will violate ODR.
 +    shared_libs: ["libcrypto"],
 +
 +    header_libs: [
@@ -81,8 +60,8 @@ index cf0f1ac..ff0cd72 100644
 +}
 +
 +cc_library_static {
-+    name: "libfastboot",
-+    defaults: ["fastboot_android_defaults"],
++    name: "libfastboot_recovery",
++    defaults: ["fastboot_recovery_defaults"],
 +    recovery: true,
 +
 +    srcs: [
@@ -95,6 +74,12 @@ index cf0f1ac..ff0cd72 100644
 +        "util.cpp",
 +        "fastboot_driver.cpp",
 +        "usb_linux.cpp",
++        "vendor_boot_img_utils.cpp",
++    ],
++
++    header_libs: [
++        "avb_headers",
++        "libstorage_literals_headers",
 +    ],
 +
 +    // Only version the final binaries
@@ -102,17 +87,24 @@ index cf0f1ac..ff0cd72 100644
 +    static_libs: ["libbuildversion"],
 +
 +    generated_headers: ["platform_tools_version"],
++
++    tidy_flags: [
++        // DO NOT add quotes around header-filter flag regex argument,
++        // because build/soong will add quotes around the whole flag.
++        "-header-filter=(system/core/fastboot/)",
++    ],
 +}
 +
 +cc_binary {
-+    name: "fastboot",
-+    defaults: ["fastboot_android_defaults"],
++    name: "fastboot_recovery",
++    stem: "fastboot",
++    defaults: ["fastboot_recovery_defaults"],
 +    recovery: true,
 +
 +    srcs: ["main.cpp"],
-+    static_libs: ["libfastboot"],
++    static_libs: ["libfastboot_recovery"],
 +}
 \ No newline at end of file
---
-2.30.2
+-- 
+2.32.0
 
