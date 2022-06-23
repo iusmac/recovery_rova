@@ -21,3 +21,12 @@ on init
 
 on boot
     start set-device-props
+
+    # Always start keymaster to silence logspam
+    mkdir /dsp
+    mkdir /firmware
+    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp ro
+    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro
+    start qseecomd
+    exec u:r:recovery:s0 -- /system/bin/sleep 1s
+    start keymaster-3-0
