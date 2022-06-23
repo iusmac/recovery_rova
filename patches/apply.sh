@@ -8,7 +8,8 @@ function main() {
         bootable_recovery-Fix-double-bind-mounting-data-media.patch \
         bootable_recovery-Fix-the-progress-bar.patch \
         bootable_recovery-Save-screenshot-to-tmp-screenshots-if-sdcard-is-not-mounted.patch \
-        bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch
+        bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch \
+        bootable_recovery-Upgrade-to-Android-12.1-sources.patch
     do
         file="ofox-12.1/$patch"
 
@@ -16,7 +17,8 @@ function main() {
     done
 
     for patch in \
-        system_core-Build-fastboot-binary.patch
+        system_core-Build-fastboot-binary.patch \
+        system_core-Upgrade-to-Android-12.1-sources.patch
     do
         __processPatch__ 'system/core' "$patch" || exit $?
     done
@@ -25,6 +27,12 @@ function main() {
         bootable_recovery-Render-UI-at-60-FPS.patch
     do
         __processPatch__ 'bootable/recovery' "$patch" || exit $?
+    done
+
+    for patch in \
+        system_vold-Upgrade-to-Android-12.1-sources.patch
+    do
+        __processPatch__ 'system/vold' "$patch" || exit $?
     done
 }
 
