@@ -1,25 +1,20 @@
 diff --git a/twrp.cpp b/twrp.cpp
-index 3ce344e..1507772 100644
+index 3ce344e..4f40b4e 100644
 --- a/twrp.cpp
 +++ b/twrp.cpp
-@@ -85,8 +85,24 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
+@@ -85,8 +85,19 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
  		} else if (DataManager::GetIntValue(TW_CRYPTO_PWTYPE) != 0) {
  			DataManager::SetValue(FOX_ENCRYPTED_DEVICE, "1");
  			LOGINFO("Is encrypted, do decrypt page first\n");
 -			if (DataManager::GetIntValue(TW_IS_FBE))
 +			if (DataManager::GetIntValue(TW_IS_FBE)) {
  				DataManager::SetValue("tw_crypto_user_id", "0");
-+				if (!TWFunc::Path_Exists("/data/misc/keystore/user_0")) {
++				if (TWFunc::Path_Exists("/data/misc/keystore/persistent.sqlite")) {
 +					gui_print("--------------------------\n");
 +					gui_print_color("warning", "*** WARNING ***\n");
-+					gui_print_color("warning", "Unfortunately, the /data partition is only partially decrypted because the ROM doesn't expose the keys needed to decrypt Internal Storage in /data/media/0.\n");
++					gui_print_color("warning", "This OrangeFox release doesn't support FBE decryption of ROMs based on Android 12 or higher.\n");
 +					gui_print_color("warning", "Therefore, it's pointless to ask you for PIN, Password or Pattern.\n\n");
-+					gui_print_color("green", "Temporary workaround:\n");
-+					gui_print_color("green", "1. Reboot to ROM\n");
-+					gui_print_color("green", "2. Remove the lockscreen protection (PIN/Password/Pattern)\n");
-+					gui_print_color("green", "3. Reboot to recovery, the data will be automatically decrypted\n");
-+					gui_print_color("green", "4. When you're done, reboot to system and enable lockscreen protection again\n\n");
-+					gui_print_color("green", "Note: you'll need to do this until the ROMs fix the decryption keys related issue.\n");
++					gui_print_color("green", "Consider to upgrade to OrangeFox R11.1(4) or newer to get FBE decryption support.\n");
 +					gui_print("--------------------------\n");
 +					PartitionManager.Update_System_Details();
 +					return;
