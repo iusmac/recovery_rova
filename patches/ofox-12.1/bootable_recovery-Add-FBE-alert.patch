@@ -1,20 +1,20 @@
 diff --git a/twrp.cpp b/twrp.cpp
-index 3ce344e..4f40b4e 100644
+index b99b1134d..2de90f5bf 100644
 --- a/twrp.cpp
 +++ b/twrp.cpp
-@@ -85,8 +85,19 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
+@@ -89,8 +89,19 @@ static void Decrypt_Page(bool SkipDecryption, bool datamedia) {
  		} else if (DataManager::GetIntValue(TW_CRYPTO_PWTYPE) != 0) {
  			DataManager::SetValue(FOX_ENCRYPTED_DEVICE, "1");
  			LOGINFO("Is encrypted, do decrypt page first\n");
 -			if (DataManager::GetIntValue(TW_IS_FBE))
 +			if (DataManager::GetIntValue(TW_IS_FBE)) {
  				DataManager::SetValue("tw_crypto_user_id", "0");
-+				if (TWFunc::Path_Exists("/data/misc/keystore/persistent.sqlite")) {
++				if (TWFunc::Path_Exists("/data/misc/keystore/user_0")) {
 +					gui_print("--------------------------\n");
 +					gui_print_color("warning", "*** WARNING ***\n");
-+					gui_print_color("warning", "This OrangeFox release doesn't support FBE decryption of ROMs based on Android 12 or higher.\n");
++					gui_print_color("warning", "This OrangeFox release doesn't support FBE decryption of ROMs based on Android 11 or lower.\n");
 +					gui_print_color("warning", "Therefore, it's pointless to ask you for PIN, Password or Pattern.\n\n");
-+					gui_print_color("green", "Consider to upgrade to OrangeFox R11.1(4) or newer to get FBE decryption support.\n");
++					gui_print_color("green", "Consider to downgrade to OrangeFox R11.1(3) or older to get FBE decryption support.\n");
 +					gui_print("--------------------------\n");
 +					PartitionManager.Update_System_Details();
 +					return;
