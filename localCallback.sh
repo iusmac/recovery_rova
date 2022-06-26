@@ -35,12 +35,15 @@ function main() {
             makeLockscreenBGSemiTransparent
             removeUnusedSplashImages
             bindBatteryTempToShowCPUTemp
+            moveDepsAwayFromRamdisk
+            addDepsCheckPopup
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
             assertRamdiskIsSmallerThan 20 # MiB
             copyVimToZip
             copyPythonToZip
+            copyDepsToZip
     esac
 }
 
@@ -323,6 +326,58 @@ function bindBatteryTempToShowCPUTemp() {
     local old='<listitem name="{@show_cpu_temp_bar}">'
     local new='<listitem name="{@show_cpu_temp_bar} + {@battery}">'
     __sedReplace__ "s/$old/$new/" "$custom_xml"
+}
+
+function moveDepsAwayFromRamdisk() {
+    echo -e "${GREY}-- Copying not vital blobs away from ramdisk... ${NC}"
+
+    local FOX_TMP="$OUT"/tmp_files
+
+    mkdir -p "$FOX_TMP"
+
+    local f ramdisk_source target_dir
+    for f in \
+    ; do
+        ramdisk_source="$FOX_RAMDISK/$f"
+        if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
+            target_dir="$FOX_TMP/${f%/*}"
+            mkdir -p "$target_dir"
+            chmod +x "$ramdisk_source"
+            mv "$ramdisk_source" "$target_dir"
+        else
+            echo '--- No such file/directory:' "$ramdisk_source"
+        fi
+    done
+}
+
+function copyDepsToZip() {
+    echo -e "${GREY}-- Copying not vital blobs to ZIP archive... ${NC}"
+
+    local FOX_TMP="$OUT"/tmp_files
+
+    (cd "$FOX_TMP" && cp -a . "$OF_WORKING_DIR"/.fox_deps)
+}
+
+function addDepsCheckPopup() {
+    echo -e "${GREY}-- Adding missing dependencies check pop-up... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local files_xml=$TWRES_DIR/pages/files.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line popup="$local_pages/files-required-deps-popup.xml"
+    local check="$local_pages/files-required-deps-check.xml"
+
+    sed -i -e '/<!-- Required Dependencies Popup -->/,/<!-- \/Required Dependencies Popup -->/ d' \
+        -e '/<!-- Required Dependencies Popup -->/,/<!-- \/Required Dependencies Popup -->/ d' \
+        "$files_xml"
+
+    # Check at the beginning
+    line="$(__getMatchLineNr__ '<page name="filemanagerlist">' "$files_xml")" || exit $?
+    sed -i "$line r $check" "$files_xml"
+
+    # Insert at the end after all pages
+    line="$(__getMatchLineNr__ '<\/pages>' "$files_xml")" || exit $?
+    sed -i "$((line - 1)) r $popup" "$files_xml"
 }
 
 # Inherit some colour codes form vendor/recovery

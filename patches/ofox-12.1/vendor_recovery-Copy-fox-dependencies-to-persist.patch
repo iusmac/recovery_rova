@@ -1,0 +1,49 @@
+From ebf1fb193a45af4d2bb2d4489ed9757afc402c90 Mon Sep 17 00:00:00 2001
+From: iusmac <iusico.maxim@libero.it>
+Date: Mon, 27 Jun 2022 18:23:30 +0200
+Subject: [PATCH] Copy Fox dependencies (.fox_deps) to /persist
+
+Signed-off-by: iusmac <iusico.maxim@libero.it>
+---
+ OrangeFox_A12.sh                                    |  2 +-
+ installer/META-INF/com/google/android/update-binary | 11 +++++++++++
+ 2 files changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/OrangeFox_A12.sh b/OrangeFox_A12.sh
+index 4badb31..8bc7cba 100755
+--- a/OrangeFox_A12.sh
++++ b/OrangeFox_A12.sh
+@@ -666,7 +666,7 @@ local TDT=$(date "+%d %B %Y")
+   [ -e "$tmp" ] && $CP "$tmp" "$OF_WORKING_DIR/META-INF/debug/default.prop"
+ 
+   # create update zip
+-  ZIP_CMD="zip --exclude=*.git* -r9 $ZIP_FILE ."
++  ZIP_CMD="zip --exclude=*.git* -yr9 $ZIP_FILE ."
+   echo "- Running ZIP command: $ZIP_CMD"
+   $ZIP_CMD -z < $FOX_VENDOR_PATH/Files/INSTALL.txt
+ 
+diff --git a/installer/META-INF/com/google/android/update-binary b/installer/META-INF/com/google/android/update-binary
+index 1a1d7d4..2133d9f 100644
+--- a/installer/META-INF/com/google/android/update-binary
++++ b/installer/META-INF/com/google/android/update-binary
+@@ -692,6 +692,17 @@ Main() {
+    	   package_extract_dir "sdcard" "$internal_SD"
+    	} 
+ 
++# Install /persist stuff
++    ui_print "- Installing Fox dependencies to the /persist ..."
++    mount_part '/persist'
++    if [ "$(is_mounted '/persist')" = '0' ]; then
++        ui_print '- Error: unable to mount /persist'
++        exit 1
++    fi
++    rm -rf /persist/.fox_deps
++    mkdir -p /persist/.fox_deps
++    package_extract_dir '.fox_deps' /persist/.fox_deps
++
+ # Prevent the stock recovery from replacing this recovery
+ 	MountThemAll
+ 	
+-- 
+2.32.0
+

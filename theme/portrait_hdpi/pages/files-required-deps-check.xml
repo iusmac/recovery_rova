@@ -1,0 +1,8 @@
+<!-- Required Dependencies Check -->
+<action>
+    <condition var1="fox_persist_reached" var2="1"/>
+    <condition var1="fox_persist_deps" op="!=" var2="1"/>
+    <condition var1="dialog_required_deps_startup" op="!=" var2="1"/>
+    <action function="overlay">dialog_required_deps</action>
+</action>
+<!-- /Required Dependencies Check -->

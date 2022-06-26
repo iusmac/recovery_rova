@@ -1,0 +1,55 @@
+<!-- Required Dependencies Popup -->
+<page name="dialog_required_deps">
+    <template name="dialog_body"/>
+
+    <button>
+        <placement x="%bg_storage_x%" y="%bg_storage_y%"/>
+        <image resource="dialog_bg"/>
+    </button>
+
+    <text style="text_dlg_title">
+        <placement x="%bg_storage_hdr_x%" y="%bg_storage_hdr_y%"/>
+        <text>Missing Fox dependencies</text>
+    </text>
+
+    <text style="text_body1">
+        <placement x="%bg_storage_hdr_x%" y="%db_text1_y%"/>
+        <text>It seems that you have only flashed</text>
+    </text>
+
+    <text style="text_body1">
+        <placement x="%bg_storage_hdr_x%" y="%db_text2_y%"/>
+        <text>.img file or reflashed persist.img.</text>
+    </text>
+
+    <text style="text_body1">
+        <placement x="%bg_storage_hdr_x%" y="%db_text3_y%"/>
+        <text>OrangeFox ships its dependencies</text>
+    </text>
+    <text style="text_body1">
+        <placement x="%bg_storage_hdr_x%" y="%db_text4_y%"/>
+        <text>in .zip archive. Please, (re)flash</text>
+    </text>
+    <text style="text_body1">
+        <placement x="%bg_storage_hdr_x%" y="1078"/>
+        <text>recovery using .zip archive.</text>
+    </text>
+
+    <button style="btn_dlg_hl">
+        <placement x="%db_right_x%" y="%db_y%"/>
+        <text>{@ok_btn}</text>
+        <action function="set">dialog_required_deps_startup=1</action>
+        <action function="overlay"/>
+    </button>
+
+    <action>
+        <touch key="home"/>
+        <action function="page">main</action>
+    </action>
+
+    <action>
+        <touch key="back"/>
+        <action function="overlay"/>
+    </action>
+</page>
+<!-- /Required Dependencies Popup -->

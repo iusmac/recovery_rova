@@ -9,7 +9,8 @@ function main() {
         bootable_recovery-Fix-the-progress-bar.patch \
         bootable_recovery-Save-screenshot-to-tmp-screenshots-if-sdcard-is-not-mounted.patch \
         bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch \
-        bootable_recovery-Upgrade-to-Android-12.1-sources.patch
+        bootable_recovery-Upgrade-to-Android-12.1-sources.patch \
+        bootable_recovery-Copy-fox-persist-dependencies-to-ramdisk.patch
     do
         file="ofox-12.1/$patch"
 
@@ -33,6 +34,13 @@ function main() {
         system_vold-Upgrade-to-Android-12.1-sources.patch
     do
         __processPatch__ 'system/vold' "$patch" || exit $?
+    done
+
+    for patch in \
+        vendor_recovery-Copy-fox-dependencies-to-persist.patch
+    do
+        file="ofox-12.1/$patch"
+        __processPatch__ 'vendor/recovery' "$file" || exit $?
     done
 }
 
