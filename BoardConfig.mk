@@ -110,7 +110,6 @@ BOARD_USES_QCOM_HARDWARE := true
 # TWRP Configuration
 TW_SCREEN_BLANK_ON_BOOT := true
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone7/temp"
-TW_EXTRA_LANGUAGES := true
 TW_THEME := portrait_hdpi
 TW_HAS_EDL_MODE := true
 TW_MAX_BRIGHTNESS := 255

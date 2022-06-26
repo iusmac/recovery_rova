@@ -82,8 +82,6 @@ function removeFonts() {
 
     # Those are not mentioned in resources
     rm "$fonts_dir"/{Exo2,MILanPro}-Medium.ttf
-    # Remove Japanese and Arab fonts since there's no translations for them
-    rm "$fonts_dir"/{ae_Cortoba,NotoSansCJKjp-Regular}.ttf
 
     # Let FiraCode move to where Chococooky font was to avoid the gap
     if __findMatch__ 'row4_2a_y' "$custom_xml"; then
