@@ -335,6 +335,8 @@ function moveDepsAwayFromRamdisk() {
 
     local f ramdisk_source target_dir
     for f in \
+        system/bin/fastboot{,d} \
+        system/lib64/android.hardware.fastboot@1.{0,1}.so \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
