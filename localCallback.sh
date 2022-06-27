@@ -345,6 +345,7 @@ function moveDepsAwayFromRamdisk() {
         sbin/gnused \
         sbin/magiskboot \
         system/usr/share/zoneinfo/tzdata \
+        system/bin/fsck.{fat,f2fs,exfat} \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
