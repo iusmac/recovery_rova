@@ -343,6 +343,7 @@ function moveDepsAwayFromRamdisk() {
         sbin/{zip,gnutar} \
         system/bin/lzma \
         sbin/gnused \
+        sbin/magiskboot \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
