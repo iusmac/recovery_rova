@@ -340,6 +340,8 @@ function moveDepsAwayFromRamdisk() {
         system/bin/{mount,mkfs,fsck}.ntfs \
         system/lib64/lib{fuse-lite,ntfs-3g}.so \
         sbin/busybox \
+        sbin/{zip,gnutar} \
+        system/bin/lzma \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
