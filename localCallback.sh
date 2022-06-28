@@ -350,6 +350,7 @@ function moveDepsAwayFromRamdisk() {
         system/bin/sgdisk \
         system/bin/bc \
         system/bin/awk \
+        system/bin/{mke2fs,mkfs.fat,mkexfatfs,tune2fs} \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
