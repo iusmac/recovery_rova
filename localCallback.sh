@@ -349,6 +349,7 @@ function moveDepsAwayFromRamdisk() {
         system/bin/avbctl \
         system/bin/sgdisk \
         system/bin/bc \
+        system/bin/awk \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
