@@ -348,6 +348,7 @@ function moveDepsAwayFromRamdisk() {
         system/bin/fsck.{fat,f2fs,exfat} \
         system/bin/avbctl \
         system/bin/sgdisk \
+        system/bin/bc \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
