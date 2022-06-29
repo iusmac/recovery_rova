@@ -1,10 +1,8 @@
 #!/sbin/sh
 
-python_bin=/sdcard/Fox/FoxFiles/python3/bin/python3
+python_bin=$(which python)
 
-if [ -e $python_bin ]; then
-    chmod 0755 $python_bin
-else
+if [ ! -f $python_bin ]; then
     echo 'Python binary is missing. Try reinstalling OrangeFox using .zip archive.' >&2
     exit 1
 fi

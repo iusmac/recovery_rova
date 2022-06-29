@@ -42,7 +42,6 @@ function main() {
             OF_WORKING_DIR="$1"
             assertRamdiskIsSmallerThan 20 # MiB
             copyVimToZip
-            copyPythonToZip
             copyDepsToZip
     esac
 }
@@ -264,11 +263,6 @@ function increaseUIRenderingTo60FPS() {
     done
 }
 
-function copyPythonToZip() {
-    echo -e "${GREY}-- Installing Python... ${NC}"
-    cp -a "$SCRIPT_DIR"/prebuilt/python3 "$OF_WORKING_DIR/sdcard/Fox/FoxFiles"
-}
-
 function addDarkLightModeToggler() {
     echo -e "${GREY}-- Adding Dark/Light Mode Toggler... ${NC}"
 
@@ -351,6 +345,8 @@ function moveDepsAwayFromRamdisk() {
         system/bin/bc \
         system/bin/awk \
         system/bin/{mke2fs,mkfs.fat,mkexfatfs,tune2fs} \
+        system/bin/python3 \
+        system/etc/python \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then

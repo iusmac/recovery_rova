@@ -49,6 +49,7 @@ InitFox() {
     }${green}\${HOSTNAME}${NC}:${blue}\${PWD:-?}${NC}${PS1} "
 }
 
+alias python=python3 python3=python_cli
 export IS_ORANGEFOX_USER_TERM=true
 
 InitFox;
