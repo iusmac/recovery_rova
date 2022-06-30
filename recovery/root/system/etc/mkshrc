@@ -16,7 +16,7 @@ export HOSTNAME TMPDIR
 
 # OrangeFox
 InitFox() {
-    alias dir='l -all' l='ls --color' la='l -a' ll='l -l' lo='l -a -l';
+    alias dir='l -all' l='ls --color' la='l -a' ll='la -l' lo='l -a -l';
     alias grep='grep -n --color=auto' fgrep='fgrep -n --color=auto' egrep='egrep -n --color=auto'
     [ -z "$HOME" ] && export HOME=/sdcard;
     [ -z "$SHELL" ] && export SHELL=/sbin/sh;
