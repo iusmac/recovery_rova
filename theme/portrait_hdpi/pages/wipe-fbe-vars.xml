@@ -1,0 +1,5 @@
+<!-- FBE vars -->
+<variables>
+    <variable name="fbe_btn_y" value="%screen_h%-600"/>
+</variables>
+<!-- /FBE vars -->

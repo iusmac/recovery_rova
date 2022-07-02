@@ -156,10 +156,11 @@ function addFBEFeatureToPartMgr() {
     local page="$local_pages/wipe-fbe-page.xml"
     local hook_format="$local_pages/wipe-fbe-hook-format.xml"
     local hook_detect="$local_pages/wipe-fbe-hook-detect.xml"
+    local vars="$local_pages/wipe-fbe-vars.xml"
 
     # Remove old changes
     local tag
-    for tag in 'buttons' 'page' 'hook-format' 'hook-detect'; do
+    for tag in 'buttons' 'page' 'hook-format' 'hook-detect' 'vars'; do
         sed -i "/<!-- FBE $tag -->/,/<!-- \/FBE $tag -->/ d" "$wipe_xml"
     done
 
@@ -170,6 +171,10 @@ function addFBEFeatureToPartMgr() {
     # Insert our page after all pages
     line="$(__getMatchLineNr__ '<\/pages>' "$wipe_xml")" || exit $?
     sed -i "$((line - 1)) r $page" "$wipe_xml"
+
+    # Insert vars after 'pages' tag
+    line="$(__getMatchLineNr__ '<\/pages>' "$wipe_xml")" || exit $?
+    sed -i "$line r $vars" "$wipe_xml"
 
     # Special case: we also need to trigger FBE disabling on data formatting page
     line="$(__getMatchLineNr__ '<data name="tw_confirm_formatdata"\/>' "$wipe_xml")" || exit $?

@@ -5,7 +5,7 @@
     <condition var1="tw_has_data_media" var2="1"/>
     <condition var1="tw_partition_mount_point" var2="/data"/>
     <condition var1="fbe_toggler_is_fbe_enabled" var2="0"/>
-    <placement x="%btn_raised_left_x%" y="%row6_3_y%"/>
+    <placement x="%btn_raised_left_x%" y="%fbe_btn_y%"/>
     <text>Enable FBE</text>
     <action function="set">tw_enable_fbe=1</action>
     <action function="page">fbe_toggle</action>
@@ -17,7 +17,7 @@
     <condition var1="tw_has_data_media" var2="1"/>
     <condition var1="tw_partition_mount_point" var2="/data"/>
     <condition var1="fbe_toggler_is_fbe_enabled" var2="1"/>
-    <placement x="%btn_raised_left_x%" y="%row6_3_y%"/>
+    <placement x="%btn_raised_left_x%" y="%fbe_btn_y%"/>
     <text>Disable FBE</text>
     <action function="set">tw_enable_fbe=0</action>
     <action function="page">fbe_toggle</action>
