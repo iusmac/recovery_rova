@@ -128,6 +128,7 @@ TWRP_INCLUDE_LOGCAT := true
 TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_PYTHON := true
 TW_INCLUDE_FASTBOOTD := true
+TW_EXCLUDE_APEX := true
 
 # Disable Mouse Cursor
 TW_INPUT_BLACKLIST := "hbtp_vm"
