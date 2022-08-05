@@ -15,6 +15,10 @@
 # limitations under the License.
 #
 
+# Dynamic Partitions
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+PRODUCT_RETROFIT_DYNAMIC_PARTITIONS := true
+
 # Emulated storage
 $(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 

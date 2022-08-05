@@ -1,9 +1,4 @@
 # mount point   fstype device                                   device2          flags
-/system_root    ext4   /dev/block/bootdevice/by-name/system                      flags=backup=0;display="System";wipeingui
-/system_image   emmc   /dev/block/bootdevice/by-name/system                      flags=backup=1;flashimg=1
-/vendor         ext4   /dev/block/bootdevice/by-name/cust                        flags=slotselect;display="Vendor";backup=1;wipeingui
-/vendor_image   emmc   /dev/block/bootdevice/by-name/cust                        flags=backup=1;flashimg=1
-
 /data           ext4   /dev/block/bootdevice/by-name/userdata                    flags=fileencryption=aes-256-xts:aes-256-cts;metadata_encryption=aes-256-xts;fsflags="discard"
 /metadata       ext4   /dev/block/bootdevice/by-name/oem                         flags=display="Metadata";fsflags="discard"
 /cache          ext4   /dev/block/bootdevice/by-name/cache                       flags=display="Cache"

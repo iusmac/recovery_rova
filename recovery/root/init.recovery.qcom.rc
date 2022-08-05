@@ -15,6 +15,9 @@ on init
     # DT2W
     write /proc/sys/dev/xiaomi_msm8937_touchscreen/enable_dt2w 1
 
+# Retrofit Dynamic Partitions
+on init
+    exec u:r:recovery:s0 -- /system/bin/rdp.sh
 
 on boot
     write /sys/bus/cpu/devices/cpu0/cpufreq/scaling_governor conservative
