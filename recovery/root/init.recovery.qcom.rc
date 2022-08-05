@@ -21,6 +21,7 @@ on init
 
 on boot
     start set-device-props
+    start health-hal-2-1
 
     # Always start keymaster to silence logspam
     mkdir /dsp
