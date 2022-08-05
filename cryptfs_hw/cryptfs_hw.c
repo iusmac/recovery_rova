@@ -60,7 +60,6 @@
 #define CRYPTFS_HW_KMS_CLEAR_KEY			0
 #define CRYPTFS_HW_KMS_WIPE_KEY				1
 #define CRYPTFS_HW_UP_CHECK_COUNT			10
-#define CRYPTFS_HW_CLEAR_KEY_FAILED			-11
 #define CRYPTFS_HW_KMS_MAX_FAILURE			-10
 #define CRYPTFS_HW_UPDATE_KEY_FAILED			-9
 #define CRYPTFS_HW_WIPE_KEY_FAILED			-8
@@ -195,22 +194,6 @@ int set_ice_param(int flag)
 }
 #endif
 
-static int cryptfs_hw_clear_key(enum cryptfs_hw_key_management_usage_type usage)
-{
-	int32_t ret;
-
-	ret = __cryptfs_hw_wipe_clear_key(usage, CRYPTFS_HW_KMS_CLEAR_KEY);
-	if (ret) {
-		SLOGE("Error::ioctl call to wipe the encryption key for usage %d failed with ret = %d, errno = %d\n",
-			usage, ret, errno);
-		ret = CRYPTFS_HW_CLEAR_KEY_FAILED;
-	} else {
-		SLOGE("SUCCESS::ioctl call to wipe the encryption key for usage %d success with ret = %d\n",
-			usage, ret);
-	}
-	return ret;
-}
-
 static int cryptfs_hw_update_key(enum cryptfs_hw_key_management_usage_type usage,
 			unsigned char *current_hash32, unsigned char *new_hash32)
 {
@@ -292,20 +275,6 @@ static unsigned char* get_tmp_passwd(const char* passwd)
     return tmp_passwd;
 }
 
-static int is_qseecom_up()
-{
-    int i = 0;
-    char value[PROPERTY_VALUE_MAX] = {0};
-
-    for (; i<CRYPTFS_HW_UP_CHECK_COUNT; i++) {
-        property_get("vendor.sys.keymaster.loaded", value, "");
-        if (!strncmp(value, "true", PROPERTY_VALUE_MAX))
-            return 1;
-        usleep(100000);
-    }
-    return 0;
-}
-
 /*
  * For NON-ICE targets, it would return 0 on success. On ICE based targets,
  * it would return key index in the ICE Key LUT
@@ -363,7 +332,6 @@ int is_ice_enabled(void)
 {
   char prop_storage[PATH_MAX];
   int storage_type = 0;
-  int fd;
 
   /*
    * Since HW FDE is a compile time flag (due to QSSI requirements),
