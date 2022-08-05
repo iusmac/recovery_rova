@@ -18,6 +18,7 @@ on init
     setprop ro.build.system_root_image true
     export ANDROID_ROOT /system_root
     setprop ro.board.platform msm8937
+    exec u:r:recovery:s0 -- /system/bin/resetprop ro.boot.verifiedbootstate orange
 
 on boot
     start set-device-props
