@@ -3,7 +3,7 @@
 # ***************************************
 # ******** FBE Encryption Toggler *******
 # ***************************************
-# ** Version: v1.1 ** Date: 16/06/2022 **
+# ** Version: v1.2 ** Date: 18/08/2022 **
 # ***************************************
 # *********** (c) 2022 iusmac ***********
 # ***************************************
@@ -13,25 +13,42 @@ main() {
     local fde_regex='(encryptable|forceencrypt)=footer'
     local fbe_regex='fileencryption=[^,]+(,?)'
     local fbe_to_fde="/\/data/ s/$fbe_regex/encryptable=footer\1/g"
+    # NOTE: usage of "encryptable=" flag causes bootloop on Android 13+
+    # (SDK 33+) since FDE support is completely removed there, thus we
+    # need to get rid of it to leave the ROM unencrypted.
+    local fbe_off_A13_regex="/\/data/ s/(,?)$fbe_regex/\2/g"
     local fstab_file='/vendor/etc/fstab.qcom'
     local GREP=$(find_grep)
     local SED=$(find_sed)
 
-    isFdeEnabled() {
-         $GREP -E -q "$fde_regex" $fstab_file && ! $GREP -E -q "$fbe_regex" $fstab_file
+    isFbeDisabled() {
+        if isAndroid13OrLater; then
+           ! $GREP -E -q "$fbe_regex" $fstab_file
+        else
+            $GREP -E -q "$fde_regex" $fstab_file && ! $GREP -E -q "$fbe_regex" $fstab_file
+        fi
     }
 
     isFbeEnabled() {
-        ! $GREP -E -q "$fde_regex" $fstab_file && $GREP -E -q "$fbe_regex" $fstab_file
+        if isAndroid13OrLater; then
+            $GREP -E -q "$fbe_regex" $fstab_file
+        else
+            ! $GREP -E -q "$fde_regex" $fstab_file && $GREP -E -q "$fbe_regex" $fstab_file
+        fi
     }
 
     disableFBE() {
         log 'Disabling FBE encryption ...'
 
-        if isFdeEnabled; then
+        local fbe_off_regex="$fbe_to_fde"
+        if isAndroid13OrLater; then
+            fbe_off_regex="$fbe_off_A13_regex"
+        fi
+
+        if isFbeDisabled; then
             log 'FBE has already been disabled!'
             return 1
-        elif [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
+        elif [ -z "$($SED -E -i -e "$fbe_off_regex w /dev/stdout" $fstab_file)" ]; then
             log 'Failed to disable FBE due to malformed fstab file!'
             return 1
         fi
@@ -40,60 +57,49 @@ main() {
     }
 
     enableFBE() {
-        log 'Mounting system ...'
-        mount_part /system_root
-
-        log 'Checking SDK compatibility ...'
-        local sdk; sdk="$(getSdk)"
-
-        if [ -z "$sdk" ]; then
-            sdk=0
-        fi
-
-        local ret
-
         if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 24 ]; then
-            ret=1; log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
-        else
-            if [ "$sdk" -eq 0 ]; then
-                log 'Cannot detect ROM SDK. Continue anyway.'
-                log 'Keep in mind that only Android 7+ based ROMs support FBE.'
-            elif [ "$sdk" -lt 29 ]; then
-                log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
-            fi
-            log 'Enabling FBE encryption ...'
-
-            local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
-            # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
-            # let's explicitly set it to be compatible across recoveries
-            if [ "$sdk" -ge 30 ]; then
-                fbe_str="${fbe_str}:v1"
-            fi
-            local fde_to_fbe="/\/data/ s/$fde_regex/$fbe_str/g"
-
-            if isFbeEnabled; then
-                ret=1; log 'FBE has already been enabled!'
-            elif [ -z "$($SED -E -i -e "$fde_to_fbe w /dev/stdout" $fstab_file)" ]; then
-                ret=1; log 'Failed to enable FBE due to malformed fstab file!'
-            fi
+            log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
+            return 1
         fi
-        log 'Unmounting system ...'
-        umount_part /system_root
 
-        return $ret
+        if [ "$sdk" -lt 29 ]; then
+            log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
+        fi
+        log 'Enabling FBE encryption ...'
+
+        local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
+        # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
+        # let's explicitly set it to be compatible across recoveries
+        if [ "$sdk" -ge 30 ]; then
+            fbe_str="${fbe_str}:v1"
+        fi
+
+        if isFbeEnabled; then
+            log 'FBE has already been enabled!'
+            return 1
+        fi
+
+        local fbe_on_regex="/\/data/ s/$fde_regex/$fbe_str/g"
+        if isAndroid13OrLater; then
+            # Append fileencryption flag to the end
+            fbe_on_regex="/\/data/ s/$/,$fbe_str/g"
+        fi
+
+        if [ -z "$($SED -E -i -e "$fbe_on_regex w /dev/stdout" $fstab_file)" ]; then
+            log 'Failed to enable FBE due to malformed fstab file!'
+            return 1
+        fi
+
+        return 0
     }
 
     disableFBEIfEnabled() {
         if ! isFbeEnabled; then
             log 'FBE is not enabled. Skipping.'
-        else
-            log 'Disabling FBE encryption ...'
-
-            if [ -z "$($SED -E -i -e "$fbe_to_fde w /dev/stdout" $fstab_file)" ]; then
-                log 'Failed to disable FBE due to malformed fstab file!'
-                return 1
-            fi
+            return 0
         fi
+
+        disableFBE
 
         return 0
     }
@@ -161,6 +167,18 @@ main() {
         exit 1
     fi
 
+    log 'Mounting system ...'
+    mount_part /system_root
+
+    log 'Retrieving SDK version ...'
+    local sdk; sdk="$(getSdk)"
+    if [ -z "$sdk" ]; then
+        log 'Unable to retrieve SDK version.'
+        log 'Unmounting system ...'
+        umount_part /system_root
+        exit 1
+    fi
+
     local code=0
     case "$action" in
         0) disableFBE; code=$?;;
@@ -172,6 +190,9 @@ main() {
 
     log 'Unmounting vendor ...'
     umount_part /vendor
+
+    log 'Unmounting system ...'
+    umount_part /system_root
 
     if [ $code -eq 0 ]; then
         log 'Done!'
@@ -281,6 +302,10 @@ getSdk() {
 
     log "Unable to locate file: $file"
     return 1
+}
+
+isAndroid13OrLater() {
+    [ "$sdk" -ge 33 ]
 }
 
 DISPLAY_LOG=1
