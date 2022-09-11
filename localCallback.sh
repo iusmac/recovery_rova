@@ -334,8 +334,7 @@ function moveDepsAwayFromRamdisk() {
 
     local f ramdisk_source target_dir
     for f in \
-        system/bin/fastboot{,d} \
-        system/lib64/android.hardware.fastboot@1.{0,1}.so \
+        system/bin/fastboot \
         system/bin/{mount,mkfs,fsck}.ntfs \
         system/lib64/lib{fuse-lite,ntfs-3g}.so \
         sbin/busybox \
