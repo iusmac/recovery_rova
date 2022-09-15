@@ -351,6 +351,7 @@ function moveDepsAwayFromRamdisk() {
         system/bin/{mke2fs,mkfs.fat,mkexfatfs,tune2fs} \
         system/bin/python3 \
         system/etc/python \
+        FFiles/nano/bin/nano.bin \
     ; do
         ramdisk_source="$FOX_RAMDISK/$f"
         if [ -f "$ramdisk_source" ] || [ -d "$ramdisk_source" ]; then
