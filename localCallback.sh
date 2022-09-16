@@ -348,7 +348,7 @@ function moveDepsAwayFromRamdisk() {
         system/bin/sgdisk \
         system/bin/bc \
         system/bin/awk \
-        system/bin/{mke2fs,mkfs.fat,mkexfatfs,tune2fs} \
+        system/bin/{mkfs.fat,mkexfatfs,tune2fs} \
         system/bin/python3 \
         system/etc/python \
         FFiles/nano/bin/nano.bin \
