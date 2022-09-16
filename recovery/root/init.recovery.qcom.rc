@@ -1,12 +1,5 @@
 import /init.recovery.qcom_decrypt.rc
 
-service set-device-props /system/bin/set-device-props.sh
-    user root
-    group root
-    disabled
-    oneshot
-    seclabel u:r:recovery:s0
-
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
@@ -19,9 +12,9 @@ on init
     export ANDROID_ROOT /system_root
     setprop ro.board.platform msm8937
     exec u:r:recovery:s0 -- /system/bin/resetprop ro.boot.verifiedbootstate orange
+    exec u:r:recovery:s0 -- /system/bin/set-device-props.sh
 
 on boot
-    start set-device-props
     start health-hal-2-1
 
     # Always start keymaster to silence logspam
