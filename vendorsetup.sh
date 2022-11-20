@@ -67,6 +67,7 @@ export OF_FIX_OTA_UPDATE_MANUAL_FLASH_ERROR='1'
 export FOX_VERSION='R11.1_5'
 export OF_MAINTAINER=iusmac
 export OF_USE_TWRP_SAR_DETECT='1'
+export OF_DISABLE_MIUI_OTA_BY_DEFAULT='1'
 export OF_QUICK_BACKUP_LIST='/system_root;/vendor;/data;/persist;/boot;'
 export FOX_VARIANT='FDE+FBE'
 
