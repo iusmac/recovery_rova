@@ -24,5 +24,5 @@
 /efsg           emmc   /dev/block/bootdevice/by-name/fsg                         flags=backup=1;subpartitionof=/efs1
 
 # Removable storage
-/sdcard1        auto   /dev/block/mmcblk1p1                                      flags=display="MicroSD";storage;wipeingui;removable
-/usb_otg        auto   /dev/block/sda1                          /dev/block/sda   flags=display="USB OTG";storage;wipeingui;removable
+/sdcard1        auto   /dev/block/mmcblk1p1                     /dev/block/mmcblk1p4   flags=display="MicroSD";storage;wipeingui;removable
+/usb_otg        auto   /dev/block/sda1                          /dev/block/sda4  flags=display="USB OTG";storage;wipeingui;removable
