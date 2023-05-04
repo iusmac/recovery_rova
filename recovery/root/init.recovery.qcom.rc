@@ -17,6 +17,9 @@ on init
 
 
 on boot
+    write /sys/bus/cpu/devices/cpu2/online 0
+    write /sys/bus/cpu/devices/cpu3/online 0
+
     start health-hal-2-1
 
     # Always start keymaster to silence logspam
