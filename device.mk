@@ -15,6 +15,9 @@
 # limitations under the License.
 #
 
+# Emulated storage
+$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+
 # Encryption
 PRODUCT_PACKAGES += \
     qcom_decrypt \
