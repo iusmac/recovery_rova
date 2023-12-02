@@ -33,8 +33,8 @@ on boot
 
     # Always start keymaster to silence logspam
     mkdir /firmware
-    wait /dev/block/bootdevice/by-name/modem
-    mount vfat /dev/block/bootdevice/by-name/modem /firmware ro
+    wait /dev/block/platform/soc/7824900.sdhci/by-name/modem
+    mount vfat /dev/block/platform/soc/7824900.sdhci/by-name/modem /firmware ro
     start qseecomd
     exec u:r:recovery:s0 -- /system/bin/sleep 1s
     start keymaster-3-0
