@@ -38,3 +38,6 @@ on boot
     start qseecomd
     exec u:r:recovery:s0 -- /system/bin/sleep 1s
     start keymaster-3-0
+
+on property:ro.boot.bootdevice=7864900.sdhci
+    exec u:r:recovery:s0 -- /system/bin/resetprop ro.gsid.image_running 1
