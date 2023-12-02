@@ -1,6 +1,7 @@
 import /init.recovery.qcom_decrypt.rc
 
 on fs
+    write /sys/kernel/sdhci_msm/add_host 1
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
 
