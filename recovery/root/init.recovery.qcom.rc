@@ -17,6 +17,11 @@ on init
 
 
 on boot
+    write /sys/bus/cpu/devices/cpu0/cpufreq/scaling_governor conservative
+    write /sys/bus/cpu/devices/cpu1/cpufreq/scaling_governor conservative
+    write /sys/bus/cpu/devices/cpu2/cpufreq/scaling_governor conservative
+    write /sys/bus/cpu/devices/cpu3/cpufreq/scaling_governor conservative
+
     write /sys/bus/cpu/devices/cpu2/online 0
     write /sys/bus/cpu/devices/cpu3/online 0
 
