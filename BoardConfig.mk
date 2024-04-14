@@ -128,6 +128,7 @@ TW_INCLUDE_RESETPROP := true
 TW_INCLUDE_PYTHON := true
 TW_INCLUDE_FASTBOOTD := true
 TW_EXCLUDE_APEX := true
+TW_FRAMERATE := 60
 
 # Disable Mouse Cursor
 TW_INPUT_BLACKLIST := "hbtp_vm"
