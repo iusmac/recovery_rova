@@ -46,14 +46,6 @@ If you don't have enough technical knowledge (or are simply too lazy 😌), you 
     — Build recovery? [Y/n] Y
     ```
 
-### Dependencies
-- *Kernel*: https://github.com/iusmac/kernel_rova
-_(place to kernel/xiaomi/rova)_
-- *Clang*: https://gitlab.com/iusmac/android_prebuilts_clang_host_linux-x86_clang-r445002
-_(place to prebuilts/clang/host/linux-x86/clang-r445002)_
-
-_NOTE: those are automatically downloaded when using Rova Builder_
-
 ### Device specifications
 Basic                   | Spec Sheet
 -----------------------:|:-------------------------

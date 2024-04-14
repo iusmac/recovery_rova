@@ -16,21 +16,8 @@ set_device_model() {
     done
 }
 
-case "$(cat /sys/firmware/devicetree/base/model)" in
-    "Qualcomm Technologies, Inc. MSM8917-PMI8937 QRD SKU5")
-        if [ -e /sys/class/leds/infrared/transmit ]; then
-            set_device_codename "rolex"
-            set_device_model "Redmi 4A"
-        else
-            set_device_codename "riva"
-            set_device_model "Redmi 5A (Nougat bootloader)"
-        fi
-        ;;
-    "Qualcomm Technologies, Inc. MSM8917 QRD SKU5")
-        set_device_codename "riva"
-        set_device_model "Redmi 5A (Oreo bootloader)"
-        ;;
-esac
+set_device_codename "$(cat /sys/xiaomi-msm8937-mach/codename)"
+set_device_model "$(cat /sys/xiaomi-msm8937-mach/product_name)"
 
 # Workaround GPIO flashlight
 echo 1 > /sys/class/leds/flashlight/max_brightness;

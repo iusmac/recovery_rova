@@ -22,7 +22,7 @@ TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
 TARGET_CPU_ABI2 :=
-TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_VARIANT := generic
 
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
@@ -30,11 +30,7 @@ TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := cortex-a53
 
-# Platform
-TARGET_BOARD_PLATFORM := msm8937
-
 # Bootloader
-TARGET_BOOTLOADER_BOARD_NAME := msm8937
 TARGET_NO_BOOTLOADER := true
 
 # Build
@@ -48,22 +44,21 @@ TARGET_SCREEN_HEIGHT := 1280
 BOARD_KERNEL_BASE := 0x80000000
 BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78B0000 androidboot.selinux=permissive firmware_class.path=/system/etc/firmware
 BOARD_KERNEL_CMDLINE += androidboot.usbconfigfs=true
+BOARD_KERNEL_CMDLINE += androidboot.mode=recovery
 BOARD_KERNEL_CMDLINE += audit=0
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
-BOARD_KERNEL_IMAGE_NAME  := Image.gz-dtb
 BOARD_RAMDISK_OFFSET := 0x01000000
-TARGET_KERNEL_CONFIG := rova_defconfig
-TARGET_KERNEL_SOURCE := kernel/xiaomi/rova
-TARGET_KERNEL_CLANG_COMPILE := true
-TARGET_KERNEL_CLANG_VERSION := r445002
+TARGET_PREBUILT_KERNEL := $(LOCAL_PATH)/prebuilt/Image.gz-dtb
+
+# Ramdisk
+BOARD_RAMDISK_USE_LZMA := true
+LZMA_RAMDISK_TARGETS := recovery
 
 # Encryption
 BOARD_USES_QCOM_FBE_DECRYPTION := true
-TARGET_CRYPTFS_HW_PATH := $(LOCAL_PATH)/cryptfs_hw
-TARGET_HW_DISK_ENCRYPTION := true
 TW_INCLUDE_CRYPTO := true
-TW_USE_FSCRYPT_POLICY := 1
+TW_USE_FSCRYPT_POLICY := 2
 
 PLATFORM_VERSION := 127
 PLATFORM_VERSION_LAST_STABLE := $(PLATFORM_VERSION)
@@ -83,11 +78,15 @@ BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
 BOARD_VENDORIMAGE_PARTITION_SIZE := 872415232
 
+BOARD_USES_METADATA_PARTITION := true
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 
 # Workaround for error copying vendor files to recovery ramdisk
 TARGET_COPY_OUT_VENDOR := vendor
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
+
+# Properties
+TARGET_VENDOR_PROP += device/xiaomi/rova/vendor.prop
 
 # Recovery
 TARGET_USERIMAGES_USE_EXT4 := true
@@ -95,11 +94,13 @@ TARGET_USERIMAGES_USE_F2FS := true
 TW_INCLUDE_NTFS_3G := true
 
 TARGET_RECOVERY_DEVICE_MODULES += \
+    libion \
     libxml2 \
     vendor.display.config@1.0 \
     vendor.display.config@2.0
 
 RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so \
     $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@1.0.so \
     $(TARGET_OUT_SYSTEM_EXT_SHARED_LIBRARIES)/vendor.display.config@2.0.so

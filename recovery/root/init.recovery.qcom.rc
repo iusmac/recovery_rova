@@ -10,17 +10,18 @@ on fs
 on init
     setprop ro.build.system_root_image true
     export ANDROID_ROOT /system_root
-    setprop ro.board.platform msm8937
     exec u:r:recovery:s0 -- /system/bin/resetprop ro.boot.verifiedbootstate orange
     exec u:r:recovery:s0 -- /system/bin/set-device-props.sh
+    # DT2W
+    write /proc/sys/dev/xiaomi_msm8937_touchscreen/enable_dt2w 1
+
 
 on boot
     start health-hal-2-1
 
     # Always start keymaster to silence logspam
-    mkdir /dsp
     mkdir /firmware
-    mount ext4 /dev/block/bootdevice/by-name/dsp /dsp ro
+    wait /dev/block/bootdevice/by-name/modem
     mount vfat /dev/block/bootdevice/by-name/modem /firmware ro
     start qseecomd
     exec u:r:recovery:s0 -- /system/bin/sleep 1s
