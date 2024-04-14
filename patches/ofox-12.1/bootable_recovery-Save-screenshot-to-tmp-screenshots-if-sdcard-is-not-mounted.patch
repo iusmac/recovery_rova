@@ -16,12 +16,12 @@ Signed-off-by: iusmac <iusico.maxim@libero.it>
  1 file changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/gui/action.cpp b/gui/action.cpp
-index f706be5..fbd513e 100755
+index 66ea197..fab07cd 100755
 --- a/gui/action.cpp
 +++ b/gui/action.cpp
-@@ -1387,8 +1387,11 @@ int GUIAction::screenshot(std::string arg __unused)
- 	//} else
- 	strcpy(path, "/sdcard/Fox/screenshots/");
+@@ -1386,8 +1386,11 @@ int GUIAction::screenshot(std::string arg __unused)
+ 	strcpy(path, Fox_Home.c_str());
+ 	strcat(path, "/screenshots/");
  
 -	if (!TWFunc::Create_Dir_Recursive(path, 0775, uid, gid))
 -		return 0;
@@ -35,4 +35,3 @@ index f706be5..fbd513e 100755
  	path_len = strlen(path);
 -- 
 2.32.0
-

@@ -28,10 +28,10 @@ Signed-off-by: iusmac <iusico.maxim@libero.it>
  1 file changed, 9 insertions(+), 10 deletions(-)
 
 diff --git a/recovery_ui/screen_ui.cpp b/recovery_ui/screen_ui.cpp
-index 087fc0e..50395e1 100644
+index b2c828f..d09c1fe 100644
 --- a/recovery_ui/screen_ui.cpp
 +++ b/recovery_ui/screen_ui.cpp
-@@ -443,6 +443,8 @@ void ScreenRecoveryUI::draw_background_locked() {
+@@ -444,6 +444,8 @@ void ScreenRecoveryUI::draw_background_locked() {
  // called with updateMutex locked.
  void ScreenRecoveryUI::draw_foreground_locked() {
    if (current_icon_ != NONE) {
@@ -40,7 +40,7 @@ index 087fc0e..50395e1 100644
      const auto& frame = GetCurrentFrame();
      int frame_width = gr_get_width(frame);
      int frame_height = gr_get_height(frame);
-@@ -753,12 +755,7 @@ void ScreenRecoveryUI::update_screen_locked() {
+@@ -756,12 +758,7 @@ void ScreenRecoveryUI::update_screen_locked() {
  // Updates only the progress bar, if possible, otherwise redraws the screen.
  // Should only be called with updateMutex locked.
  void ScreenRecoveryUI::update_progress_locked() {
@@ -54,7 +54,7 @@ index 087fc0e..50395e1 100644
    gr_flip();
  }
  
-@@ -772,7 +769,7 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
+@@ -775,7 +772,7 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
  
        // update the installation animation, if active
        // skip this if we have a text overlay (too expensive to update)
@@ -63,7 +63,7 @@ index 087fc0e..50395e1 100644
          if (!intro_done_) {
            if (current_frame_ == intro_frames_.size() - 1) {
              intro_done_ = true;
-@@ -802,6 +799,8 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
+@@ -805,6 +802,8 @@ void ScreenRecoveryUI::ProgressThreadLoop() {
        if (redraw) update_progress_locked();
      }
  
@@ -72,7 +72,7 @@ index 087fc0e..50395e1 100644
      double end = now();
      // minimum of 20ms delay between frames
      double delay = interval - (end - start);
-@@ -926,9 +925,6 @@ bool ScreenRecoveryUI::Init(const std::string& locale) {
+@@ -947,9 +946,6 @@ bool ScreenRecoveryUI::Init(const std::string& locale) {
  
    LoadAnimation();
  
@@ -82,7 +82,7 @@ index 087fc0e..50395e1 100644
    return true;
  }
  
-@@ -987,6 +983,9 @@ void ScreenRecoveryUI::SetProgressType(ProgressType type) {
+@@ -1008,6 +1004,9 @@ void ScreenRecoveryUI::SetProgressType(ProgressType type) {
    std::lock_guard<std::mutex> lg(updateMutex);
    if (progressBarType != type) {
      progressBarType = type;

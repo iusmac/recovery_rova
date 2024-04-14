@@ -11,10 +11,10 @@ Signed-off-by: iusmac <iusico.maxim@libero.it>
  3 files changed, 17 insertions(+)
 
 diff --git a/partition.cpp b/partition.cpp
-index b6c6eb05b..c431df086 100644
+index 5bb3ec7..be3b6d2 100644
 --- a/partition.cpp
 +++ b/partition.cpp
-@@ -643,6 +643,7 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
+@@ -664,6 +664,7 @@ bool TWPartition::Process_Fstab_Line(const char *fstab_line, bool Display_Error,
  	if (Mount_Point == "/persist" && Can_Be_Mounted) {
  		bool mounted = Is_Mounted();
  		if (mounted || Mount(false)) {
@@ -23,10 +23,10 @@ index b6c6eb05b..c431df086 100644
  			#ifndef OF_DEVICE_WITHOUT_PERSIST
  			DataManager::LoadPersistValues();
 diff --git a/twrp-functions.cpp b/twrp-functions.cpp
-index 4928273c2..66291d2e3 100755
+index 9b32d88..6dd3b01 100755
 --- a/twrp-functions.cpp
 +++ b/twrp-functions.cpp
-@@ -5010,4 +5010,19 @@ bool TWFunc::Magiskboot_Repack_Patch_VBMeta()
+@@ -5188,4 +5188,19 @@ bool TWFunc::Magiskboot_Repack_Patch_VBMeta()
     #endif
  }
  
@@ -47,10 +47,10 @@ index 4928273c2..66291d2e3 100755
 +}
  //
 diff --git a/twrp-functions.hpp b/twrp-functions.hpp
-index b97d00528..766dda9e9 100755
+index f4a80a0..0b12d1f 100755
 --- a/twrp-functions.hpp
 +++ b/twrp-functions.hpp
-@@ -138,6 +138,7 @@ public:
+@@ -142,6 +142,7 @@ public:
  	static string Get_Current_Date(void);                               // Returns the current date in ccyy-m-dd--hh-nn-ss format
  	static void Auto_Generate_Backup_Name();                            // Populates TW_BACKUP_NAME with a backup name based on current date and ro.build.display.id from /system/build.prop
  	static void Fixup_Time_On_Boot(const string& time_paths = ""); // Fixes time on devices which need it (time_paths is a space separated list of paths to check for ats_* files)
