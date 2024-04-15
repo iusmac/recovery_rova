@@ -23,7 +23,7 @@ function main() {
     case "$action" in
         --first-call) # before ramdisk packing
             FOX_RAMDISK="$1"
-            removeFonts
+            # removeFonts
             compressAllPNGs
             addFBEFeatureToPartMgr
             enableRebootToFastbootItemUnconditionally
