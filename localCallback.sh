@@ -35,14 +35,14 @@ function main() {
             makeLockscreenBGSemiTransparent
             removeUnusedSplashImages
             bindBatteryTempToShowCPUTemp
-            moveDepsAwayFromRamdisk
-            addDepsCheckPopup
+            # moveDepsAwayFromRamdisk
+            # addDepsCheckPopup
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
             assertRamdiskIsSmallerThan 20 # MiB
             copyVimToZip
-            copyDepsToZip
+            # copyDepsToZip
     esac
 }
 
