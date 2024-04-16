@@ -1,9 +1,9 @@
 #!/sbin/sh
 
 # ***************************************
-# ******** FBE Encryption Toggler *******
+# ******** FBEv2 Encryption Toggler *******
 # ***************************************
-# ** Version: v1.2 ** Date: 18/08/2022 **
+# ** Version: v2.0 ** Date: 16/04/2024 **
 # ***************************************
 # *********** (c) 2022 iusmac ***********
 # ***************************************
@@ -38,7 +38,7 @@ main() {
     }
 
     disableFBE() {
-        log 'Disabling FBE encryption ...'
+        log 'Disabling FBEv2 encryption ...'
 
         local fbe_off_regex="$fbe_to_fde"
         if isAndroid13OrLater; then
@@ -46,10 +46,10 @@ main() {
         fi
 
         if isFbeDisabled; then
-            log 'FBE has already been disabled!'
+            log 'FBEv2 has already been disabled!'
             return 1
         elif [ -z "$($SED -E -i -e "$fbe_off_regex w /dev/stdout" $fstab_file)" ]; then
-            log 'Failed to disable FBE due to malformed fstab file!'
+            log 'Failed to disable FBEv2 due to malformed fstab file!'
             return 1
         fi
 
@@ -57,25 +57,20 @@ main() {
     }
 
     enableFBE() {
-        if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 24 ]; then
-            log 'You need an Android 7+ based ROM to get FBE support. Aborting.'
+        if [ "$sdk" -gt 0 ] && [ "$sdk" -lt 30 ]; then
+            log 'You need an Android 11+ based ROM to get FBEv2 support. Aborting.'
             return 1
         fi
 
         if [ "$sdk" -lt 29 ]; then
-            log 'NOTE: not all ROMs have working FBE. In case of a bootloop, disable FBE or Format Data'
+            log 'NOTE: not all ROMs have working FBEv2. In case of a bootloop, disable FBEv2 or Format Data'
         fi
-        log 'Enabling FBE encryption ...'
+        log 'Enabling FBEv2 encryption ...'
 
-        local fbe_str='fileencryption=aes-256-xts:aes-256-cts'
-        # Android 11 introduces 3rd argument (fileencryption=::[flags]), so
-        # let's explicitly set it to be compatible across recoveries
-        if [ "$sdk" -ge 30 ]; then
-            fbe_str="${fbe_str}:v1"
-        fi
+        local fbe_str='fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized'
 
         if isFbeEnabled; then
-            log 'FBE has already been enabled!'
+            log 'FBEv2 has already been enabled!'
             return 1
         fi
 
@@ -86,7 +81,7 @@ main() {
         fi
 
         if [ -z "$($SED -E -i -e "$fbe_on_regex w /dev/stdout" $fstab_file)" ]; then
-            log 'Failed to enable FBE due to malformed fstab file!'
+            log 'Failed to enable FBEv2 due to malformed fstab file!'
             return 1
         fi
 
@@ -95,7 +90,7 @@ main() {
 
     disableFBEIfEnabled() {
         if ! isFbeEnabled; then
-            log 'FBE is not enabled. Skipping.'
+            log 'FBEv2 is not enabled. Skipping.'
             return 0
         fi
 
@@ -105,12 +100,12 @@ main() {
     }
 
     printFBEState() {
-        log 'Detecting FBE state ...'
+        log 'Detecting FBEv2 state ...'
         if isFbeEnabled; then
-            log 'FBE is enabled.'
+            log 'FBEv2 is enabled.'
             echo -n 1
         else
-            log 'FBE is not enabled.'
+            log 'FBEv2 is not enabled.'
             echo -n 0
         fi
 
@@ -123,17 +118,17 @@ main() {
 
         log 'Detecting /data encryption type ...'
         if [ -f '/data/unencrypted/key/version' ]; then
-            log '/data partition is FBE. Trying enabling FBE ...'
+            log '/data partition is FBEv2. Trying enabling FBEv2 ...'
 
             if isFbeEnabled; then
-                log 'FBE has already been enabled. Skipping.'
+                log 'FBEv2 has already been enabled. Skipping.'
                 return 0
             fi
 
             enableFBE
             return $?
         elif cat /proc/mounts | grep /data | grep -q dm- || [ -d /data/media ]; then
-            log '/data partition is FDE (or it may be in the future). Disabling FBE if ROM has enabled it ...'
+            log '/data partition is FDE (or it may be in the future). Disabling FBEv2 if ROM has enabled it ...'
             disableFBEIfEnabled
             return $?
         else
