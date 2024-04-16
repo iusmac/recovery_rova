@@ -1,0 +1,8 @@
+<!-- USBExporter button -->
+<button style="btn_raised">
+    <placement x="%center_x%" y="%nav_item_y%" placement="4"/>
+    <text>Export Device Storage</text>
+    <action function="set">tw_exp_busy=1</action>
+    <action function="page">usb_storage_exporter</action>
+</button>
+<!-- /USBExporter button -->

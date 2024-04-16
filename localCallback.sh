@@ -198,16 +198,16 @@ function enableRebootToFastbootItemUnconditionally() {
 }
 
 function addUSBStorageExporterToMount() {
-    echo -e "${GREY}-- Adding USB Storage Exporter slider to Mount... ${NC}"
+    echo -e "${GREY}-- Adding USB Storage Exporter button to Mount... ${NC}"
 
     local TWRES_DIR=$FOX_RAMDISK/twres
     local mount_xml=$TWRES_DIR/pages/mount.xml
     local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
-    local line slider="$local_pages/mount-usb-exporter-slider.xml"
+    local line button="$local_pages/mount-usb-exporter-button.xml"
     local page="$local_pages/mount-usb-exporter-page.xml"
 
     local tag
-    for tag in 'page' 'slider'; do
+    for tag in 'page' 'button'; do
         sed -i "/<!-- USBExporter $tag -->/,/<!-- \/USBExporter $tag -->/ d" "$mount_xml"
     done
 
@@ -215,9 +215,9 @@ function addUSBStorageExporterToMount() {
     line="$(__getMatchLineNr__ '<\/pages>' "$mount_xml")" || exit $?
     sed -i "$((line - 1)) r $page" "$mount_xml"
 
-    # Insert slider
+    # Insert button
     line="$(__getMatchLineNr__ '<\/partitionlist>' "$mount_xml")" || exit $?
-    sed -i "$line r $slider" "$mount_xml"
+    sed -i "$line r $button" "$mount_xml"
 }
 
 function addEMMCLifetimeToPartMgr() {
