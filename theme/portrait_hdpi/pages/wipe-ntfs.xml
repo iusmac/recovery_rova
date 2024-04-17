@@ -1,0 +1,3 @@
+<!-- Ntfs -->
+<listitem name="NTFS">ntfs<condition var1="fileexists" var2="/system/bin/mkfs.ntfs"/></listitem>
+<!-- /Ntfs -->

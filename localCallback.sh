@@ -37,6 +37,7 @@ function main() {
             bindBatteryTempToShowCPUTemp
             # moveDepsAwayFromRamdisk
             # addDepsCheckPopup
+            addNtfsToWipeList
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -393,6 +394,24 @@ function addDepsCheckPopup() {
     # Insert at the end after all pages
     line="$(__getMatchLineNr__ '<\/pages>' "$files_xml")" || exit $?
     sed -i "$((line - 1)) r $popup" "$files_xml"
+}
+
+function addNtfsToWipeList() {
+    echo -e "${GREY}-- Adding NTFS file-system to Wipe list... ${NC}"
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local wipe_xml=$TWRES_DIR/pages/wipe.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line ntfs="$local_pages/wipe-ntfs.xml"
+
+    sed -i '/<!-- Ntfs -->/,/<!-- \/Ntfs -->/ d' "$wipe_xml"
+
+    # Insert after F2FS item
+    line="$(__getMatchLineNr__ '<listitem name="F2FS">' "$wipe_xml")" || exit $?
+    sed -i "$line r $ntfs" "$wipe_xml"
+
+    # Also increase the fs list height to display all 7 elements
+    line="$(__getMatchLineNr__ '<listbox>' "$wipe_xml")" || exit $?
+    __sedReplace__ "$((line + 1)) s/%lb_l6%/%lb_l7%/" "$wipe_xml"
 }
 
 # Inherit some colour codes form vendor/recovery
