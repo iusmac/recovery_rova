@@ -7,6 +7,7 @@ function main() {
         bootable_recovery-Fix-the-progress-bar.patch \
         bootable_recovery-Save-screenshot-to-tmp-screenshots-if-sdcard-is-not-mounted.patch \
         bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch \
+        bootable_recovery-Revert-gui.cpp-Only-report-touchscreen-input-when-sc.patch \
         # bootable_recovery-Copy-fox-persist-dependencies-to-ramdisk.patch
     do
         file="ofox-12.1/$patch"
