@@ -33,9 +33,9 @@ function __processPatch__() {
     local file="${2-}"
 
     if __confirm__ "Apply $file?"; then
-        patch --directory="$root" -p1 --verbose < "$__DIR__/$file" || exit $?
+        patch --no-backup-if-mismatch --directory="$root" -p1 --verbose < "$__DIR__/$file" || exit $?
     elif __confirm__ "Revert $file?"; then
-        patch --directory="$root" -p1 --verbose --reverse < "$__DIR__/$file" || exit $?
+        patch --no-backup-if-mismatch --directory="$root" -p1 --verbose --reverse < "$__DIR__/$file" || exit $?
     fi
 }
 
