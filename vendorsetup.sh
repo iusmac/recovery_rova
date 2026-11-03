@@ -71,6 +71,7 @@ export OF_USE_TWRP_SAR_DETECT='1'
 export OF_DISABLE_MIUI_OTA_BY_DEFAULT='1'
 export OF_QUICK_BACKUP_LIST='/system_root;/vendor;/data;/persist;/boot;/super;/super_cust;'
 export FOX_VARIANT='FBEv2-RDP'
+export FOX_DELETE_INITD_ADDON=0
 
 # Magisk
 user='topjohnwu'
