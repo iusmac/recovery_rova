@@ -72,6 +72,7 @@ export OF_DISABLE_MIUI_OTA_BY_DEFAULT='1'
 export OF_QUICK_BACKUP_LIST='/system_root;/vendor;/data;/persist;/boot;/super;/super_cust;'
 export FOX_VARIANT='FBEv2-RDP'
 export FOX_DELETE_INITD_ADDON=0
+export FOX_NO_BLANK_DT2W=1
 
 # Magisk
 user='topjohnwu'

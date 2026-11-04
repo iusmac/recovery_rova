@@ -6,7 +6,7 @@ function main() {
     for patch in \
         bootable_recovery-Fix-the-progress-bar.patch \
         bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch \
-        bootable_recovery-Revert-gui.cpp-Only-report-touchscreen-input-when-sc.patch \
+        bootable_recovery-Force-render-lock-overlay-when-no-screen-blank.diff \
         # bootable_recovery-Copy-fox-persist-dependencies-to-ramdisk.patch
     do
         file="ofox-12.1/$patch"

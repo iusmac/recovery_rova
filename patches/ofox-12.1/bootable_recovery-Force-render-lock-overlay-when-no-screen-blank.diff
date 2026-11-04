@@ -1,0 +1,67 @@
+diff --git a/gui/blanktimer.cpp b/gui/blanktimer.cpp
+index 1c946ea7..0bbce2f4 100755
+--- a/gui/blanktimer.cpp
++++ b/gui/blanktimer.cpp
+@@ -55,6 +55,8 @@ void blanktimer::setTimer(void) {
+ 	clock_gettime(CLOCK_MONOTONIC, &btimer);
+ }
+ 
++extern void flip(void);
++
+ void blanktimer::checkForTimeout() {
+ #ifndef TW_NO_SCREEN_TIMEOUT
+ 	pthread_mutex_lock(&mutex);
+@@ -67,10 +69,14 @@ void blanktimer::checkForTimeout() {
+ 		TWFunc::Set_Brightness("5");
+ 	}
+ 	if (sleepTimer && diff.tv_sec > sleepTimer && state < kOff) {
+-		state = kOff;
+ 		TWFunc::Set_Brightness("0");
+ 		TWFunc::check_and_run_script("/system/bin/postscreenblank.sh", "blank");
+ 		PageManager::ChangeOverlay("lock");
++#ifdef TW_NO_SCREEN_BLANK
++		PageManager::Render();
++		flip();
++#endif
++		state = kOff;
+ 	}
+ #ifndef TW_NO_SCREEN_BLANK
+ 	if (state == kOff) {
+@@ -129,9 +135,13 @@ void blanktimer::blank(void) {
+ 	pthread_mutex_lock(&mutex);
+ 	if (state == kOn) {
+ 		orig_brightness = getBrightness();
+-		state = kOff;
+ 		TWFunc::Set_Brightness("0");
+ 		TWFunc::check_and_run_script("/system/bin/postscreenblank.sh", "blank");
++#ifdef TW_NO_SCREEN_BLANK
++		PageManager::Render();
++		flip();
++#endif
++		state = kOff;
+ 	}
+ #ifndef TW_NO_SCREEN_BLANK
+ 	if (state == kOff) {
+@@ -145,8 +155,8 @@ void blanktimer::blank(void) {
+ 
+ void blanktimer::toggleBlank(void) {
+ 	if (state == kOn) {
+-		blank();
+ 		PageManager::ChangeOverlay("lock");
++		blank();
+ 	} else {
+ 		resetTimerAndUnblank();
+ 	}
+diff --git a/gui/gui.cpp b/gui/gui.cpp
+index e03fe91f..c19c0ad2 100644
+--- a/gui/gui.cpp
++++ b/gui/gui.cpp
+@@ -90,7 +90,7 @@ static inline long long nowMs() { struct timeval t; gettimeofday(&t, NULL); retu
+ 
+ extern "C" void gr_write_frame_to_file(int fd);
+ 
+-static void flip(void)
++void flip(void)
+ {
+ 	if (gRecorder != -1)
+ 	{

@@ -140,6 +140,7 @@ TW_INCLUDE_PYTHON := true
 TW_INCLUDE_FASTBOOTD := true
 TW_EXCLUDE_APEX := true
 TW_FRAMERATE := 60
+TW_NO_SCREEN_BLANK := true
 
 # Disable Mouse Cursor
 TW_INPUT_BLACKLIST := "hbtp_vm"
