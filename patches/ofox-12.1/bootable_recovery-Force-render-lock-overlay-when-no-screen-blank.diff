@@ -1,0 +1,26 @@
+diff --git a/gui/blanktimer.cpp b/gui/blanktimer.cpp
+index 1c946ea..52116dc 100755
+--- a/gui/blanktimer.cpp
++++ b/gui/blanktimer.cpp
+@@ -71,6 +71,10 @@ void blanktimer::checkForTimeout() {
+ 		TWFunc::Set_Brightness("0");
+ 		TWFunc::check_and_run_script("/system/bin/postscreenblank.sh", "blank");
+ 		PageManager::ChangeOverlay("lock");
++#ifdef TW_NO_SCREEN_BLANK
++		PageManager::Render();
++		flip();
++#endif
+ 	}
+ #ifndef TW_NO_SCREEN_BLANK
+ 	if (state == kOff) {
+@@ -147,6 +151,10 @@ void blanktimer::toggleBlank(void) {
+ 	if (state == kOn) {
+ 		blank();
+ 		PageManager::ChangeOverlay("lock");
++#ifdef TW_NO_SCREEN_BLANK
++		PageManager::Render();
++		flip();
++#endif
+ 	} else {
+ 		resetTimerAndUnblank();
+ 	}
