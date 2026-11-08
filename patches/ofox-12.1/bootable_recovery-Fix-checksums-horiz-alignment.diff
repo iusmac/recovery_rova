@@ -1,0 +1,71 @@
+diff --git a/gui/theme/portrait_hdpi/pages/templates/templates.xml b/gui/theme/portrait_hdpi/pages/templates/templates.xml
+index 9dd03df..2568d70 100644
+--- a/gui/theme/portrait_hdpi/pages/templates/templates.xml
++++ b/gui/theme/portrait_hdpi/pages/templates/templates.xml
+@@ -951,7 +951,7 @@
+ 			</text>
+ 
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row3_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row3_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha1"/>
+ 				<restrict disable="1"/>
+@@ -964,7 +964,7 @@
+ 			</text>
+ 
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row4_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row4_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha2"/>
+ 				<restrict disable="1"/>
+@@ -977,7 +977,7 @@
+ 			</text>
+ 			
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row5_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row5_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha5"/>
+ 				<restrict disable="1"/>
+diff --git a/gui/theme/portrait_hdpi/pages/files.xml b/gui/theme/portrait_hdpi/pages/files.xml
+index c4b4fc0..f2cc10d 100644
+--- a/gui/theme/portrait_hdpi/pages/files.xml
++++ b/gui/theme/portrait_hdpi/pages/files.xml
+@@ -1161,7 +1161,7 @@
+ 			
+ 			<button style="menu_btn">
+ 				<condition var1="ft_inf_md5" var2="{@tap_to_generate}"/>
+-				<placement x="%col1_x_caption%" y="%row2_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
++				<placement x="%gl_text_x%" y="%row2_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
+ 				<action function="set">ft_inf_md5={@calc_checksum}</action>
+ 				<action function="set">ft_chsum_calculated=0</action>
+ 				<action function="page">fm_file_checksum_calc</action>
+@@ -1170,7 +1170,7 @@
+ 			</button>
+ 			<button style="menu_btn">
+ 				<condition var1="ft_inf_sha1" var2="{@tap_to_generate}"/>
+-				<placement x="%col1_x_caption%" y="%row3_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
++				<placement x="%gl_text_x%" y="%row3_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
+ 				<action function="set">ft_chsum_calculated=0</action>
+ 				<action function="set">ft_inf_sha1={@calc_checksum}</action>
+ 				<action function="page">fm_file_checksum_calc</action>
+@@ -1179,7 +1179,7 @@
+ 			</button>
+ 			<button style="menu_btn">
+ 				<condition var1="ft_inf_sha2" var2="{@tap_to_generate}"/>
+-				<placement x="%col1_x_caption%" y="%row4_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
++				<placement x="%gl_text_x%" y="%row4_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
+ 				<action function="set">ft_chsum_calculated=0</action>
+ 				<action function="set">ft_inf_sha2={@calc_checksum}</action>
+ 				<action function="page">fm_file_checksum_calc</action>
+@@ -1188,7 +1188,7 @@
+ 			</button>
+ 			<button style="menu_btn">
+ 				<condition var1="ft_inf_sha5" var2="{@tap_to_generate}"/>
+-				<placement x="%col1_x_caption%" y="%row5_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
++				<placement x="%gl_text_x%" y="%row5_1a_y%" w="%input_w%" h="%mb_h_hide%"/>
+ 				<action function="set">ft_chsum_calculated=0</action>
+ 				<action function="set">ft_inf_sha5={@calc_checksum}</action>
+ 				<action function="page">fm_file_checksum_calc</action>
