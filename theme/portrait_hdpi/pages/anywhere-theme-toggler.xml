@@ -1,82 +1,68 @@
 <!-- Theme toggler buttons -->
-<!-- Night -->
+<!-- Initial style switch: light => dark -->
 <button style="actionbar">
-    <condition var1="theme_style" var2="Light"/>
-    <condition var1="theme_dark_old" var2="Night"/>
+    <condition var1="theme_style" op="!=" var2="Black"/>
+    <condition var1="theme_style" op="!=" var2="Dark"/>
+    <condition var1="theme_style" op="!=" var2="Gray"/>
+    <condition var1="theme_dark_old" op="!="/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <action function="set">theme_style_tmp=Night</action>
+    <action function="set">theme_style_tmp=Dark</action>
     <action function="set">theme_style_act_tmp=Default</action>
     <action function="set">theme_accent_tmp=%theme_accent%</action>
     <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
     <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
-    <action function="set">theme_pie_tmp=%theme_pie%</action>
     <action function="set">update_style=1</action>
     <action function="set">of_reload_back=main</action>
-    <action function="set">theme_style_old=</action>
-    <action function="overlay">apply_changes</action>
-</button>
-<button style="actionbar">
-    <condition var1="theme_style" var2="Light"/>
-    <condition var1="theme_dark_old" op="!=" var2="Night"/>
-    <condition var1="theme_dark_old" op="!=" var2="Black"/>
-    <condition var1="theme_dark_old" op="!=" var2="Gray"/>
-    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <action function="set">theme_style_tmp=Night</action>
-    <action function="set">theme_style_act_tmp=Default</action>
-    <action function="set">theme_accent_tmp=%theme_accent%</action>
-    <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
-    <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
-    <action function="set">theme_pie_tmp=%theme_pie%</action>
-    <action function="set">update_style=1</action>
-    <action function="set">of_reload_back=main</action>
-    <action function="set">theme_style_old=</action>
+    <action function="set">theme_light_old=%theme_style%</action>
     <action function="overlay">apply_changes</action>
 </button>
 
-<!-- Black -->
+<!-- Initial style switch: dark => light -->
 <button style="actionbar">
-    <condition var1="theme_style" var2="Light"/>
-    <condition var1="theme_dark_old" var2="Black"/>
-    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <action function="set">theme_style_tmp=Black</action>
-    <action function="set">theme_style_act_tmp=Default</action>
-    <action function="set">theme_accent_tmp=%theme_accent%</action>
-    <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
-    <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
-    <action function="set">theme_pie_tmp=%theme_pie%</action>
-    <action function="set">update_style=1</action>
-    <action function="set">of_reload_back=main</action>
-    <action function="set">theme_style_old=</action>
-    <action function="overlay">apply_changes</action>
-</button>
-
-<!-- Gray -->
-<button style="actionbar">
-    <condition var1="theme_style" var2="Light"/>
-    <condition var1="theme_dark_old" var2="Gray"/>
-    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <action function="set">theme_style_tmp=Gray</action>
-    <action function="set">theme_style_act_tmp=Default</action>
-    <action function="set">theme_accent_tmp=%theme_accent%</action>
-    <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
-    <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
-    <action function="set">theme_pie_tmp=%theme_pie%</action>
-    <action function="set">update_style=1</action>
-    <action function="set">of_reload_back=main</action>
-    <action function="set">theme_style_old=</action>
-    <action function="overlay">apply_changes</action>
-</button>
-
-<!-- Light -->
-<button style="actionbar">
+    <condition var1="theme_style" op="!=" var2="Cream"/>
     <condition var1="theme_style" op="!=" var2="Light"/>
+    <condition var1="theme_dark_old" op="!="/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <action function="set">theme_style_tmp=Light</action>
-    <action function="set">theme_style_act_tmp=Black</action>
+    <action function="set">theme_style_tmp=Cream</action>
+    <action function="set">theme_style_act_tmp=Default</action>
     <action function="set">theme_accent_tmp=%theme_accent%</action>
     <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
     <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
-    <action function="set">theme_pie_tmp=%theme_pie%</action>
+    <action function="set">update_style=1</action>
+    <action function="set">of_reload_back=main</action>
+    <action function="set">theme_dark_old=%theme_style%</action>
+    <action function="overlay">apply_changes</action>
+</button>
+
+<!-- Switch from light to the previous dark style -->
+<button style="actionbar">
+    <condition var1="theme_style" op="!=" var2="Black"/>
+    <condition var1="theme_style" op="!=" var2="Dark"/>
+    <condition var1="theme_style" op="!=" var2="Gray"/>
+    <condition var1="theme_dark_old"/>
+    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
+    <action function="set">theme_style_tmp=%theme_dark_old%</action>
+    <action function="set">theme_style_act_tmp=Default</action>
+    <action function="set">theme_accent_tmp=%theme_accent%</action>
+    <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
+    <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
+    <action function="set">update_style=1</action>
+    <action function="set">of_reload_back=main</action>
+    <action function="set">theme_light_old=%theme_style%</action>
+    <action function="overlay">apply_changes</action>
+</button>
+
+<!-- Switch from dark to the previous light style -->
+<button style="actionbar">
+    <condition var1="theme_style" op="!=" var2="Cream"/>
+    <condition var1="theme_style" op="!=" var2="Light"/>
+    <condition var1="theme_light_old"/>
+    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
+    <action function="set">theme_style_tmp=%theme_light_old%</action>
+    <action function="set">theme_style_act_tmp=Default</action>
+    <action function="set">theme_accent_tmp=%theme_accent%</action>
+    <action function="set">theme_accent_light_tmp=%theme_accent_light%</action>
+    <action function="set">theme_accent_dark_tmp=%theme_accent_dark%</action>
     <action function="set">update_style=1</action>
     <action function="set">of_reload_back=main</action>
     <action function="set">theme_dark_old=%theme_style%</action>
@@ -84,7 +70,16 @@
 </button>
 
 <image>
+    <condition var1="theme_style" op="!=" var2="Black"/>
+    <condition var1="theme_style" op="!=" var2="Dark"/>
+    <condition var1="theme_style" op="!=" var2="Gray"/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
-    <image resource="invert"/>
+    <image resource="actionbar_theme_toggler_moon"/>
+</image>
+<image>
+    <condition var1="theme_style" op="!=" var2="Cream"/>
+    <condition var1="theme_style" op="!=" var2="Light"/>
+    <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
+    <image resource="actionbar_theme_toggler_sun"/>
 </image>
 <!-- /Theme toggler buttons -->

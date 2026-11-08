@@ -24,6 +24,7 @@ function main() {
         --first-call) # before ramdisk packing
             FOX_RAMDISK="$1"
             # removeFonts
+            copyAllImages
             compressAllPNGs
             addFBEFeatureToPartMgr
             enableRebootToFastbootItemUnconditionally
@@ -112,6 +113,14 @@ function assertRamdiskIsSmallerThan() {
     fi
 
     echo -e "${WHITEONGREEN} OK! Remaining $pretty_rem bytes ${NC}"
+}
+
+function copyAllImages() {
+    echo -e "${GREY}-- Copying all images... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local local_images_dir="$SCRIPT_DIR/theme/portrait_hdpi/images"
+    cp -r "$local_images_dir" "$TWRES_DIR" || exit $?
 }
 
 function compressAllPNGs() {
@@ -274,7 +283,14 @@ function addDarkLightModeToggler() {
 
     local TWRES_DIR=$FOX_RAMDISK/twres
     local anywhere_xml=$TWRES_DIR/pages/anywhere.xml
-    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local style_xml=$TWRES_DIR/themes/style.xml
+    local styles=$TWRES_DIR/themes/styles
+    local sed_action_xml=$TWRES_DIR/themes/sed/action.xml
+    local local_res_dir="$SCRIPT_DIR/theme/portrait_hdpi"
+    local local_pages="$local_res_dir/pages"
+    local local_style_xml="$local_res_dir/themes/style.xml"
+    local local_sed_action_xml="$local_res_dir/themes/sed/action.xml"
+    local local_styles_dir="$local_res_dir/themes/styles"
     local line buttons="$local_pages/anywhere-theme-toggler.xml"
 
     sed -i -e '/<!-- Theme toggler buttons -->/,/<!-- \/Theme toggler buttons -->/ d' \
@@ -287,6 +303,26 @@ function addDarkLightModeToggler() {
     local old='<placement x="-24" y="%console_brightness_y%" w="%slidervalue_w%" \/>'
     local new='<placement x="105" y="%console_brightness_y%" w="870" \/>'
     __sedReplace__ "s/$old/$new/" "$anywhere_xml"
+
+    # Add icons to action bar styles
+    sed -i '/<!-- Theme toggle icons -->/,/<!-- \/Theme toggle icons -->/ d' \
+        "$style_xml" "$sed_action_xml" &&
+    line="$(__getMatchLineNr__ '<!-- Action Bar -->' "$style_xml")" &&
+    sed -i "$line r $local_style_xml" "$style_xml" &&
+    # Add the 'accent' version that will be updated dynamically on theme update with 'sed'
+    line="$(__getMatchLineNr__ '<!-- Action Bar -->' "$sed_action_xml")" &&
+    sed -i "$line r $local_sed_action_xml" "$sed_action_xml" || exit $?
+    # Also add icons to brand styles
+    for local_style_xml in "$local_styles_dir"/actionbar-theme-toggle-icons/*.xml; do
+        style_xml=$styles/"${local_style_xml##*/}"
+        if [ ! -f "$style_xml" ]; then
+            echo -e "${ORANGE}--- warning: could not find style file: $style_xml${NC}"
+        else
+            sed -i "/<!-- Theme toggle icons -->/,/<!-- \/Theme toggle icons -->/ d" "$style_xml" &&
+            line="$(__getMatchLineNr__ '<!-- Action Bar -->' "$style_xml")" &&
+            sed -i "$line r $local_style_xml" "$style_xml" || exit $?
+        fi
+    done
 }
 
 function makeLockscreenBGSemiTransparent() {
