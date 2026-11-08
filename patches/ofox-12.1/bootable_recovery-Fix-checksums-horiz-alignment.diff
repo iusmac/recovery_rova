@@ -1,0 +1,31 @@
+diff --git a/gui/theme/portrait_hdpi/pages/templates/templates.xml b/gui/theme/portrait_hdpi/pages/templates/templates.xml
+index 9dd03df..2568d70 100644
+--- a/gui/theme/portrait_hdpi/pages/templates/templates.xml
++++ b/gui/theme/portrait_hdpi/pages/templates/templates.xml
+@@ -951,7 +951,7 @@
+ 			</text>
+ 
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row3_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row3_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha1"/>
+ 				<restrict disable="1"/>
+@@ -964,7 +964,7 @@
+ 			</text>
+ 
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row4_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row4_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha2"/>
+ 				<restrict disable="1"/>
+@@ -977,7 +977,7 @@
+ 			</text>
+ 			
+ 			<input>
+-				<placement x="%col1_x_caption%" y="%row5_2a_y%" w="%input_w%" h="%input_height%"/>
++				<placement x="%gl_text_x%" y="%row5_2a_y%" w="%input_w%" h="%input_height%"/>
+ 				<cursor color="%transparent%" hasfocus="0" width="0"/>
+ 				<data name="ft_inf_sha5"/>
+ 				<restrict disable="1"/>
