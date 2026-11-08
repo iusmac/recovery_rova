@@ -1,0 +1,4 @@
+<!-- Theme toggle icons -->
+<image name="actionbar_theme_toggler_moon" filename="SVG/ActionBar/theme_toggler_moon.svg" retainaspect="1" tint="#FFFFFF" scale="2.75"/>
+<image name="actionbar_theme_toggler_sun" filename="SVG/ActionBar/theme_toggler_sun.svg" retainaspect="1" tint="#FFFFFF" scale="2.75"/>
+<!-- /Theme toggle icons -->
