@@ -34,7 +34,6 @@ function main() {
             increaseUIRenderingTo60FPS
             addDarkLightModeToggler
             makeLockscreenBGSemiTransparent
-            removeUnusedSplashImages
             bindBatteryTempToShowCPUTemp
             # moveDepsAwayFromRamdisk
             # addDepsCheckPopup
@@ -333,22 +332,6 @@ function makeLockscreenBGSemiTransparent() {
 
     line="$(__getMatchLineNr__ '<page name="lock">' "$anywhere_xml")" || exit $?
     __sedReplace__ "$((line + 1)) s/%background%/%darktransparent%/" "$anywhere_xml"
-}
-
-function removeUnusedSplashImages() {
-    echo -e "${GREY}-- Removing unused splash images... ${NC}"
-
-    local TWRES_DIR=$FOX_RAMDISK/twres
-    local splash_dir=$TWRES_DIR/images/Splash
-
-    # Remove unused images and link them to a tiny empty image to avoid
-    # 'resource failed to load' errors
-    (
-        cd "$splash_dir" || exit $?
-        for f in {user,logo_d,logo_o}.png; do
-            rm $f && ln -s empty.png $f
-        done
-    )
 }
 
 function bindBatteryTempToShowCPUTemp() {
