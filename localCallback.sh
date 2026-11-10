@@ -38,6 +38,7 @@ function main() {
             # moveDepsAwayFromRamdisk
             # addDepsCheckPopup
             addNtfsToWipeList
+            copyAllVariables
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -431,6 +432,20 @@ function addNtfsToWipeList() {
     # Also increase the fs list height to display all 7 elements
     line="$(__getMatchLineNr__ '<listbox>' "$wipe_xml")" || exit $?
     __sedReplace__ "$((line + 1)) s/%lb_l6%/%lb_l7%/" "$wipe_xml"
+}
+
+function copyAllVariables() {
+    echo -e "${GREY}-- Copying all variables to resources... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local vars=$TWRES_DIR/resources/vars.xml
+    local local_res_dir="$SCRIPT_DIR/theme/portrait_hdpi"
+    local line local_vars="$local_res_dir/resources/vars.xml"
+
+    sed -i '/<!-- Custom vars -->/,/<!-- /Custom vars -->/ d' "$vars"
+
+    line="$(__getMatchLineNr__ '<\/variables>' "$vars")" &&
+    sed -i "$((line - 1)) r $local_vars" "$vars"|| exit $?
 }
 
 # Inherit some colour codes form vendor/recovery

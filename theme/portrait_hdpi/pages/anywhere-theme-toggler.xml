@@ -4,7 +4,7 @@
     <condition var1="theme_style" op="!=" var2="Black"/>
     <condition var1="theme_style" op="!=" var2="Dark"/>
     <condition var1="theme_style" op="!=" var2="Gray"/>
-    <condition var1="theme_dark_old" op="!="/>
+    <condition var1="theme_dark_old" var2="Default"/>
     <condition var1="of_reload_back" op="!=" var2="ext_custom_theme"/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
     <action function="set">theme_style_tmp=Dark</action>
@@ -22,7 +22,7 @@
 <button style="actionbar">
     <condition var1="theme_style" op="!=" var2="Cream"/>
     <condition var1="theme_style" op="!=" var2="Light"/>
-    <condition var1="theme_dark_old" op="!="/>
+    <condition var1="theme_dark_old" var2="Default"/>
     <condition var1="of_reload_back" op="!=" var2="ext_custom_theme"/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
     <action function="set">theme_style_tmp=Cream</action>
@@ -41,7 +41,7 @@
     <condition var1="theme_style" op="!=" var2="Black"/>
     <condition var1="theme_style" op="!=" var2="Dark"/>
     <condition var1="theme_style" op="!=" var2="Gray"/>
-    <condition var1="theme_dark_old"/>
+    <condition var1="theme_dark_old" op="!=" var2="Default"/>
     <condition var1="of_reload_back" op="!=" var2="ext_custom_theme"/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
     <action function="set">theme_style_tmp=%theme_dark_old%</action>
@@ -59,7 +59,7 @@
 <button style="actionbar">
     <condition var1="theme_style" op="!=" var2="Cream"/>
     <condition var1="theme_style" op="!=" var2="Light"/>
-    <condition var1="theme_light_old"/>
+    <condition var1="theme_light_old" op="!=" var2="Default"/>
     <condition var1="of_reload_back" op="!=" var2="ext_custom_theme"/>
     <placement x="%ab_back_x%" y="%console_flash_y%" placement="4"/>
     <action function="set">theme_style_tmp=%theme_light_old%</action>
