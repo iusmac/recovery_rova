@@ -1,0 +1,6 @@
+<!-- Custom vars -->
+<!-- Theme toggler vars -->
+<variable name="theme_dark_old" value="Default" persist="1"/>
+<variable name="theme_light_old" value="Default" persist="1"/>
+<!-- /Theme toggler vars -->
+<!-- /Custom vars -->
