@@ -342,7 +342,7 @@ function bindBatteryTempToShowCPUTemp() {
     local custom_xml=$TWRES_DIR/pages/customization.xml
 
     local old='<listitem name="{@show_cpu_temp_bar}">'
-    local new='<listitem name="{@show_cpu_temp_bar} + {@battery}">'
+    local new='<listitem name="{@lockscreen_info}">'
     __sedReplace__ "s/$old/$new/" "$custom_xml"
 }
 
