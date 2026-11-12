@@ -2,9 +2,14 @@
 <page name="fastboot_v2">
     <background color="%background%"/>
     <template name="keys"/>
+    <template name="gestures"/>
     <action>
         <action function="set">tw_back=advanced</action>
     </action>
+     <action>
+         <touch key="back"/>
+         <action function="page">%tw_back%</action>
+     </action>
 
     <action>
         <condition var1="tw_fb_busy" var2="0"/>
