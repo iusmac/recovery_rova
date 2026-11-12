@@ -2,9 +2,14 @@
 <page name="fastboot_v2">
     <background color="%background%"/>
     <template name="keys"/>
+    <template name="gestures"/>
     <action>
         <action function="set">tw_back=advanced</action>
     </action>
+     <action>
+         <touch key="back"/>
+         <action function="page">%tw_back%</action>
+     </action>
 
     <action>
         <condition var1="tw_fb_busy" var2="0"/>
@@ -53,7 +58,6 @@
         <condition var1="tw_fb_busy" var2="0"/>
         <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
         <action function="key">back</action>
-        <action function="page">%tw_back%</action>
     </button>
 
     <image>
@@ -70,7 +74,6 @@
         <action function="set">tw_enable_fastboot=0</action>
         <action function="set">tw_fb_busy=0</action>
         <action function="set">ui_progress=0</action>
-        <action function="set">tw_back=advanced</action>
     </button>
 
     <image>
@@ -102,7 +105,6 @@
         <action function="set">tw_enable_adb=0</action>
         <action function="set">ui_progress=100</action>
         <action function="set">tw_fb_busy=1</action>
-        <action function="set">tw_back=fastboot</action>
     </button>
 
     <button style="btn_raised_hl">
