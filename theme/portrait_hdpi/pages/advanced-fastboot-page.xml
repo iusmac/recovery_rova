@@ -10,6 +10,10 @@
         <touch key="back"/>
         <action function="page">%tw_back%</action>
     </action>
+    <action>
+        <touch key="home"/>
+        <action function="page">advanced</action>
+    </action>
 
     <action>
         <condition var1="tw_fb_busy" var2="0"/>
