@@ -1,0 +1,42 @@
+<!-- Advanced page custom actions -->
+<action>
+    <!-- Turn off fastboot on exit and re-enable adb+mtp -->
+    <condition var1="tw_fb_busy" var2="1"/>
+    <condition var1="tw_fb_mtp_orig" var2="1"/>
+    <condition var1="tw_mtp_enabled" var2="0"/>
+    <condition var1="fox_adb" var2="0"/>
+    <action function="set">tw_enable_adb=1</action>
+    <action function="set">tw_enable_fastboot=0</action>
+    <action function="adb">enable</action>
+    <action function="enableadb"/>
+    <action function="startmtp"/>
+    <action function="set">tw_fb_busy=0</action>
+</action>
+<action>
+    <!-- Turn off fastboot on exit and re-enable adb only -->
+    <condition var1="tw_fb_busy" var2="1"/>
+    <condition var1="tw_fb_adb_orig" var2="1"/>
+    <condition var1="tw_fb_mtp_orig" var2="0"/>
+    <condition var1="fox_adb" var2="0"/>
+    <action function="set">tw_enable_adb=1</action>
+    <action function="set">tw_enable_fastboot=0</action>
+    <action function="adb">enable</action>
+    <action function="enableadb"/>
+    <action function="set">tw_fb_busy=0</action>
+</action>
+<action>
+    <!-- Unexport device storage on exit and re-enable mtp to expose internal storage -->
+    <condition var1="tw_exp_busy" var2="1"/>
+    <condition var1="tw_exp_mtp_orig" var2="1"/>
+    <action function="stopmtp"/>
+    <action function="startmtp"/>
+    <action function="set">tw_exp_busy=0</action>
+</action>
+<action>
+    <!-- Unexport device storage on exit and disable mtp if it was disabled -->
+    <condition var1="tw_exp_busy" var2="1"/>
+    <condition var1="tw_exp_mtp_orig" var2="0"/>
+    <action function="stopmtp"/>
+    <action function="set">tw_exp_busy=0</action>
+</action>
+<!-- /Advanced page custom actions -->

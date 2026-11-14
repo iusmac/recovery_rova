@@ -39,6 +39,7 @@ function main() {
             # addDepsCheckPopup
             addNtfsToWipeList
             copyAllVariables
+            applyAdvancedPageConditions
             ;;
         --last-call) # before .zip packing
             OF_WORKING_DIR="$1"
@@ -447,6 +448,19 @@ function copyAllVariables() {
 
     line="$(__getMatchLineNr__ '<\/variables>' "$vars")" &&
     sed -i "$((line - 1)) r $local_vars" "$vars"|| exit $?
+}
+
+function applyAdvancedPageConditions() {
+    echo -e "${GREY}-- Applying advanced page conditions... ${NC}"
+
+    local TWRES_DIR=$FOX_RAMDISK/twres
+    local advanced_xml=$TWRES_DIR/pages/advanced.xml
+    local local_pages="$SCRIPT_DIR/theme/portrait_hdpi/pages"
+    local line custom_actions="$local_pages/advanced-page-custom-actions.xml"
+
+    sed -i '/<!-- Advanced page custom actions -->/,/<!-- \/Advanced page custom actions -->/ d' "$advanced_xml" &&
+    line="$(__getMatchLineNr__ '<page name="advanced">' "$advanced_xml")" &&
+    sed -i "$line r $custom_actions" "$advanced_xml" || exit $?
 }
 
 # Inherit some colour codes form vendor/recovery
