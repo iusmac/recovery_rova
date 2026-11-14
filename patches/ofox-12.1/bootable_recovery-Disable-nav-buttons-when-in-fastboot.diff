@@ -1,0 +1,32 @@
+diff --git a/gui/gui.cpp b/gui/gui.cpp
+index e03fe91f..dd1bffd2 100644
+--- a/gui/gui.cpp
++++ b/gui/gui.cpp
+@@ -283,13 +283,13 @@ bool InputHandler::processInput(int timeout_ms)
+ 
+ 	case EV_KEY:
+ 		if((ev.code == KEY_MENU || ev.code == KEY_HOME || ev.code == KEY_BACK) && DataManager::GetIntValue("tw_enable_keys") != 0) {
+-		    if(ev.value != 0){
++		    if(ev.value != 0 && DataManager::GetIntValue("tw_fb_busy") == 0){
+ 		         if(ev.code == KEY_HOME && DataManager::GetStrValue("tw_menu_key") != "")
+ 	                       PageManager::NotifyKey(KEY_HOMEPAGE, true);
+ 		         if(ev.code == KEY_BACK && DataManager::GetStrValue("tw_menu_key") != "")
+ 	                       PageManager::NotifyKey(KEY_BACK, true);
+ 		         DataManager::Vibrate("tw_button_vibrate");
+-		    }else{
++		    }else if(DataManager::GetIntValue("tw_fb_busy") == 0){
+ 	                 switch (ev.code)
+ 	                 {
+ 	                  case KEY_MENU:
+diff --git a/gui/gesture.cpp b/gui/gesture.cpp
+index b2a2f39..dba31f4 100755
+--- a/gui/gesture.cpp
++++ b/gui/gesture.cpp
+@@ -117,6 +117,7 @@ int GUIGesture::SetRenderPos(int x, int y, int w, int h)
+ int GUIGesture::NotifyTouch(TOUCH_STATE state, int x, int y)
+ {
+ 	if (!isConditionTrue())	 return -1;
++	if(DataManager::GetIntValue("tw_fb_busy") == 1)	 return -1;
+ 
+ 	int center = DataManager::GetIntValue("center_y");
+ 

@@ -8,6 +8,7 @@ function main() {
         bootable_recovery-data-Concatenate-battery-temperature-with-CPU-temperature.patch \
         bootable_recovery-Force-render-lock-overlay-when-no-screen-blank.diff \
         bootable_recovery-Fix-checksums-horiz-alignment.diff \
+        bootable_recovery-Disable-nav-buttons-when-in-fastboot.diff \
         # bootable_recovery-Copy-fox-persist-dependencies-to-ramdisk.patch
     do
         file="ofox-12.1/$patch"
