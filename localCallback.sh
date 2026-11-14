@@ -486,8 +486,8 @@ function __findMatch__() {
 }
 
 function __getMatchLineNr__() {
-    local pattern="${1-}" file="${2-}" line
-    line=$(sed -n "/$pattern/=" "$file")
+    local pattern="${1-}" file="${2-}" line line_start="${3:-1}" line_end="${4:-$}"
+    line=$(sed -n "$line_start,$line_end { /$pattern/{=; q; }; }" "$file")
     if [ -z "$line" ] || [ "$line" -le 0 ]; then
         echo -e "${GREY}--- caution: cannot find match '$pattern' in file: $file${NC}" >&2
         return 1
