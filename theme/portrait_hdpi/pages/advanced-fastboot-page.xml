@@ -4,12 +4,12 @@
     <template name="keys"/>
     <template name="gestures"/>
     <action>
-        <action function="set">tw_back=advanced</action>
+        <action function="set">tw_back=fox_other_additions</action>
     </action>
-     <action>
-         <touch key="back"/>
-         <action function="page">%tw_back%</action>
-     </action>
+    <action>
+        <touch key="back"/>
+        <action function="page">%tw_back%</action>
+    </action>
 
     <action>
         <condition var1="tw_fb_busy" var2="0"/>
@@ -58,7 +58,6 @@
         <condition var1="tw_fb_busy" var2="0"/>
         <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
         <action function="key">back</action>
-        <action function="page">%tw_back%</action>
     </button>
 
     <image>
