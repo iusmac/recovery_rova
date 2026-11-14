@@ -258,9 +258,10 @@ function addFastbootItemToMenu() {
         -e '/<!-- Fastboot page -->/,/<!-- \/Fastboot page -->/ d' \
         "$advanced_xml"
 
-    # Insert after ADB & Sideload item
-    line="$(__getMatchLineNr__ '<listitem name="{@fox_modules_hdr}">' "$advanced_xml")" || exit $?
-    sed -i "$((line - 1)) r $item" "$advanced_xml"
+    # Insert after Terminal item
+    line="$(__getMatchLineNr__ '<listitem name="{@terminal_btn}">' "$advanced_xml")" || exit $?
+    line="$(__getMatchLineNr__ '<\/listitem>' "$advanced_xml" "$line")" || exit $?
+    sed -i "$line r $item" "$advanced_xml"
 
     # Insert our page at the end
     line="$(__getMatchLineNr__ '<\/pages>' "$advanced_xml")" || exit $?
