@@ -1,0 +1,30 @@
+diff --git a/gui/theme/portrait_hdpi/themes/style.xml b/gui/theme/portrait_hdpi/themes/style.xml
+index 39512a1..549d99e 100644
+--- a/gui/theme/portrait_hdpi/themes/style.xml
++++ b/gui/theme/portrait_hdpi/themes/style.xml
+@@ -259,8 +259,8 @@
+ 
+ 		<variable name="power_bg" value="#F9F1E7"/>
+ 		<variable name="power_hl" value="#E9E9E944"/>
+-		<variable name="highlight_color" value="#eedfc8"/>
+-		<variable name="highlight_color_full" value="#eedfc8"/>
++		<variable name="highlight_color" value="#F9F1E775"/>
++		<variable name="highlight_color_full" value="#F9F1E780"/>
+ 
+ 		<variable name="text" value="#413327"/>
+ 		<variable name="text_secondary" value="#5F6368"/>
+diff --git a/gui/theme/portrait_hdpi/themes/styles/Cream.xml b/gui/theme/portrait_hdpi/themes/styles/Cream.xml
+index 5af538b..2cc80f4 100644
+--- a/gui/theme/portrait_hdpi/themes/styles/Cream.xml
++++ b/gui/theme/portrait_hdpi/themes/styles/Cream.xml
+@@ -259,8 +259,8 @@
+ 
+ 		<variable name="power_bg" value="#F9F1E7"/>
+ 		<variable name="power_hl" value="#E9E9E944"/>
+-		<variable name="highlight_color" value="#eedfc8"/>
+-		<variable name="highlight_color_full" value="#eedfc8"/>
++		<variable name="highlight_color" value="#F9F1E775"/>
++		<variable name="highlight_color_full" value="#F9F1E780"/>
+ 
+ 		<variable name="text" value="#413327"/>
+ 		<variable name="text_secondary" value="#5F6368"/>
