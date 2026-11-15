@@ -2,8 +2,17 @@
 <page name="usb_storage_exporter">
     <background color="%background%"/>
     <template name="keys"/>
+    <template name="gestures"/>
     <action>
         <action function="set">tw_back=mount</action>
+    </action>
+    <action>
+        <touch key="back"/>
+        <action function="page">%tw_back%</action>
+    </action>
+    <action>
+        <touch key="home"/>
+        <action function="page">main</action>
     </action>
 
     <action>
@@ -44,7 +53,6 @@
         <condition var1="tw_exp_busy" var2="0"/>
         <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
         <action function="key">back</action>
-        <action function="page">%tw_back%</action>
     </button>
 
     <image>
