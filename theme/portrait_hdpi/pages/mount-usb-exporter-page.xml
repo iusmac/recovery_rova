@@ -61,15 +61,21 @@
         <image resource="actionbar_back"/>
     </image>
 
-    <!-- Cancel -->
+    <!-- Cancel + re-enable mtp to expose internal storage -->
     <button style="actionbar">
         <condition var1="tw_exp_busy" var2="1"/>
+        <condition var1="tw_exp_mtp_orig" var2="1"/>
         <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
         <action function="stopmtp"/>
-        <action function="adb">disable</action>
-        <action function="adb">enable</action>
-        <action function="enableadb"/>
         <action function="startmtp"/>
+        <action function="set">tw_exp_busy=0</action>
+    </button>
+    <!-- Cancel + and disable mtp if it was disabled -->
+    <button style="actionbar">
+        <condition var1="tw_exp_busy" var2="1"/>
+        <condition var1="tw_exp_mtp_orig" var2="0"/>
+        <placement x="%ab_back_x%" y="%ab_y%" placement="4"/>
+        <action function="stopmtp"/>
         <action function="set">tw_exp_busy=0</action>
     </button>
 
@@ -93,12 +99,19 @@
 
     <button style="btn_raised_hl">
         <condition var1="tw_exp_busy" var2="1"/>
+        <condition var1="tw_exp_mtp_orig" var2="0"/>
         <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
         <text>Unexport</text>
         <action function="stopmtp"/>
-        <action function="adb">disable</action>
-        <action function="adb">enable</action>
-        <action function="enableadb"/>
+        <action function="set">tw_exp_busy=0</action>
+    </button>
+
+    <button style="btn_raised_hl">
+        <condition var1="tw_exp_busy" var2="1"/>
+        <condition var1="tw_exp_mtp_orig" var2="1"/>
+        <placement x="%btn_raised_right_x%" y="1764" placement="1"/>
+        <text>Unexport</text>
+        <action function="stopmtp"/>
         <action function="startmtp"/>
         <action function="set">tw_exp_busy=0</action>
     </button>
