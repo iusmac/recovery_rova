@@ -19,7 +19,7 @@ index ef52a34..b5f7812 100755
 +		char tmp[19];
  		string cpu_temp_file;
  		static unsigned long convert_temp = 0;
-+		static unsigned long convert_temp_batt = 0;
++		static long long convert_temp_batt = 0;
  		static time_t cpuSecCheck = 0;
  		struct timeval curTime;
  		string results;
@@ -33,12 +33,12 @@ index ef52a34..b5f7812 100755
  				convert_temp = strtoul(results.c_str(), NULL, 0) / 10;
 +
 +			if (TWFunc::read_file("/sys/class/power_supply/battery/temp", results_batt) != 0) return -1;
-+			convert_temp_batt = strtoul(results_batt.c_str(), NULL, 0) / 10;
++			convert_temp_batt = strtoll(results_batt.c_str(), NULL, 10) / 10;
 +
  			cpuSecCheck = curTime.tv_sec + 5;
  		}
 -		value = TWFunc::to_string(convert_temp);
-+		sprintf(tmp, "%lu °C | BATT: %lu", convert_temp, convert_temp_batt);
++		sprintf(tmp, "%lu °C | BATT: %lld", convert_temp, convert_temp_batt);
 +		value = tmp;
  		return 0;
  	}
